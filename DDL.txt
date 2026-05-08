@@ -1,0 +1,440 @@
+employ
+supplier
+vehicle
+customer 
+customercontact
+product category 
+stockmovement- outward
+supplies
+
+
+Q2. Create a table vehicle to store vehicle details of each branch.
+CREATE TABLE vehicle (
+    vehicle_id INT PRIMARY KEY,
+    vehicle_number VARCHAR(50),
+    type VARCHAR(50),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+
+Q3. Create a table employee to store employee information.
+CREATE TABLE employee (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(100),
+    role VARCHAR(50),
+    salary DECIMAL(10,2),
+    join_date DATE,
+    experience INT,
+    employee_phone VARCHAR(15),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+Q4. Create a table supplier to store supplier details.
+CREATE TABLE supplier (
+    supplier_id INT PRIMARY KEY,
+    supplier_name VARCHAR(100),
+    supplier_phone_number VARCHAR(15),
+    supplier_email VARCHAR(100)
+);
+
+Q8. Create a table customer to store customer details.
+CREATE TABLE customer (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    customer_email VARCHAR(100)
+);
+
+Q9. Create a table customer_contact to store customer contact information.
+CREATE TABLE customer_contact (
+    contact_id INT PRIMARY KEY,
+    customer_id INT,
+    address_street VARCHAR(100),
+    address_city VARCHAR(50),
+    address_pincode VARCHAR(10),
+    customer_phone_number VARCHAR(15),Q15. Create a table outward to store outward stock details.
+CREATE TABLE outward (
+    movement_id INT PRIMARY KEY,
+    sale_id INT,
+    dispatch_date DATE,
+    delivery_address VARCHAR(200),
+    FOREIGN KEY (movement_id) REFERENCES stock_movement(movement_id),
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
+);
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+Q5. Create a table product_category to store product categories.
+CREATE TABLE product_category (
+    category_id INT PRIMARY KEY,Q15. Create a table outward to store outward stock details.
+CREATE TABLE outward (
+    movement_id INT PRIMARY KEY,
+    sale_id INT,
+    dispatch_date DATE,
+    delivery_address VARCHAR(200),
+    FOREIGN KEY (movement_id) REFERENCES stock_movement(movement_id),
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
+);
+    category_name VARCHAR(100)
+);
+
+Q13. Create a table stock_movement to track stock movements.
+CREATE TABLE stock_movement (
+    movement_id INT PRIMARY KEY,
+    product_id INT,
+    branch_id INT,
+    movement_date DATE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+
+Q16. Create a table supplies to store supplier-product relationship.
+CREATE TABLE supplies (
+    supplier_id INT,
+    PRIMARY KEY (supplier_id, product_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+
+
+****aLetr ****
+Q2. Add a column vehicle_status to the vehicle table.
+ALTER TABLE vehicle
+ADD vehicle_status VARCHAR(30);
+
+
+Q3. Add a column employee_email to the employee table.
+ALTER TABLE employee
+ADD employee_email VARCHAR(100);
+
+Q5. Rename column category_name to category_title in product_category table.
+ALTER TABLE product_category
+RENAME COLUMN category_name TO category_title;
+
+Q9. Modify the datatype of address_pincode in customer_contact table.
+ALTER TABLE customer_contact
+MODIFY address_pincode VARCHAR(12);
+
+Q8. Add a column customer_phone to customer table.
+ALTER TABLE customer
+ADD customer_phone VARCHAR(15);
+
+13. Stock_Movement
+Q13. Modify the datatype of movement_date in stock_movement table.
+ALTER TABLE stock_movement
+MODIFY movement_date TIMESTAMP;
+
+15. Outward
+Q15. Modify the datatype of delivery_address in outward table.
+ALTER TABLE outward
+MODIFY delivery_address VARCHAR(300);
+
+Q16. Add a column supply_date to supplies table.
+ALTER TABLE supplies
+ADD supply_date DATE;
+
+*******delete****
+2. Vehicle
+
+Q2. Drop the table vehicle from the database.
+
+DROP TABLE vehicle;
+
+Q3. Drop the table employee from the database.
+
+DROP TABLE employee;
+
+Q5. Drop the table product_category from the database.
+
+DROP TABLE product_category;
+
+Q9. Drop the table customer_contact from the database.
+
+DROP TABLE customer_contact;
+
+
+Q8. Drop the table customer from the database.
+
+DROP TABLE customer;
+
+Q13. Drop the table stock_movement from the database.
+
+DROP TABLE stock_movement;
+
+Q15. Drop the table outward from the database.
+
+DROP TABLE outward;
+
+Q16. Drop the table supplies from the database.
+
+DROP TABLE supplies;
+
+Q2. Remove all records from the vehicle table.
+
+TRUNCATE TABLE vehicle;
+
+Q5. Remove all records from the product_category table.
+
+TRUNCATE TABLE product_category;
+
+Q8. Remove all records from the customer table.
+
+TRUNCATE TABLE customer;
+
+
+Q9. Remove all records from the customer_contact table.
+
+TRUNCATE TABLE customer_contact;
+
+Q13. Remove all records from the stock_movement table.
+
+TRUNCATE TABLE stock_movement;
+
+Q16. Remove all records from the supplies table.
+
+TRUNCATE TABLE supplies;
+Q16. Remove all records from the supplies table.
+
+TRUNCATE TABLE supplies;
+
+
+Q2. Rename the table vehicle to transport_vehicle.
+
+ALTER TABLE vehicle
+RENAME TO transport_vehicle;
+
+Q5. Rename the table product_category to item_category.
+
+ALTER TABLE product_category
+RENAME TO item_category;
+
+
+Q9. Rename the table customer_contact to client_contact.
+
+ALTER TABLE customer_contact
+RENAME TO client_contact;
+
+Q8. Rename the table customer to client.
+
+ALTER TABLE customer
+RENAME TO client;
+
+Q13. Rename the table stock_movement to inventory_movement.
+
+ALTER TABLE stock_movement
+RENAME TO inventory_movement;
+
+Q16. Rename the table supplies to supplier_products.
+
+ALTER TABLE supplies
+RENAME TO supplier_products;
+
+
+Q15. Rename the table outward to outward_stock.
+
+ALTER TABLE outward
+RENAME TO outward_stock;
+
+
+
+
+
+
+
+
+
+
+
+
+********************
+1. Warehouse_Branch
+
+Q1. Create table warehouse_branch with a UNIQUE constraint on branch_name.
+
+CREATE TABLE warehouse_branch (
+    branch_id INT PRIMARY KEY,
+    branch_name VARCHAR(100) UNIQUE,
+    city VARCHAR(50),
+    capacity INT,
+    status VARCHAR(30)
+);
+
+2. Vehicle
+
+Q2. Create table vehicle with a UNIQUE constraint on vehicle_number.
+
+CREATE TABLE vehicle (
+    vehicle_id INT PRIMARY KEY,
+    vehicle_number VARCHAR(50) UNIQUE,
+    type VARCHAR(50),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+
+3. Employee
+
+Q3. Create table employee with a CHECK constraint on salary.
+
+CREATE TABLE employee (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(100),
+    role VARCHAR(50),
+    salary DECIMAL(10,2) CHECK (salary > 0),
+    join_date DATE,
+    experience INT,
+    employee_phone VARCHAR(15),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+
+4. Supplier
+
+Q4. Create table supplier with a UNIQUE constraint on supplier_email.
+
+CREATE TABLE supplier (
+    supplier_id INT PRIMARY KEY,
+    supplier_name VARCHAR(100),
+    supplier_phone_number VARCHAR(15),
+    supplier_email VARCHAR(100) UNIQUE
+);
+
+5. Product_Category
+
+Q5. Create table product_category with a UNIQUE constraint on category_name.
+
+CREATE TABLE product_category (
+    category_id INT PRIMARY KEY,
+    category_name VARCHAR(100) UNIQUE
+);
+
+6. Product
+
+Q6. Create table product with a CHECK constraint on price.
+
+CREATE TABLE product (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    price DECIMAL(10,2) CHECK (price > 0),
+    category_id INT,
+    supplier_id INT,
+    FOREIGN KEY (category_id) REFERENCES product_category(category_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
+);
+
+7. Warehouse_Inventory
+
+Q7. Create table warehouse_inventory with a composite PRIMARY KEY constraint.
+
+CREATE TABLE warehouse_inventory (
+    branch_id INT,
+    product_id INT,
+    rack_number VARCHAR(20),
+    last_update_date DATE,
+    PRIMARY KEY (branch_id, product_id),
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+8. Customer
+
+Q8. Create table customer with a UNIQUE constraint on customer_email.
+
+CREATE TABLE customer (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    customer_email VARCHAR(100) UNIQUE
+);
+
+9. Customer_Contact
+
+Q9. Create table customer_contact with a CHECK constraint on address_pincode.
+
+CREATE TABLE customer_contact (
+    contact_id INT PRIMARY KEY,
+    customer_id INT,
+    address_street VARCHAR(100),
+    address_city VARCHAR(50),
+    address_pincode VARCHAR(10) CHECK (LENGTH(address_pincode) >= 5),
+    customer_phone_number VARCHAR(15),
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+10. Sales
+
+Q10. Create table sales with a CHECK constraint on sale_status.
+
+CREATE TABLE sales (
+    sale_id INT PRIMARY KEY,
+    sale_date DATE,
+    sale_status VARCHAR(30)
+        CHECK (sale_status IN ('Pending','Completed','Cancelled')),
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
+);
+
+11. Order_Items
+
+Q11. Create table order_items with a CHECK constraint on quantity.
+
+CREATE TABLE order_items (
+    order_item_id INT PRIMARY KEY,
+    sale_id INT,
+    product_id INT,
+    quantity INT CHECK (quantity > 0),
+    delivery_date DATE,
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+);
+
+12. Returns
+
+Q12. Create table returns with a CHECK constraint on quantity_returned.
+
+CREATE TABLE returns (
+    return_id INT PRIMARY KEY,
+    sale_id INT,
+    return_date DATE,
+    quantity_returned INT CHECK (quantity_returned > 0),
+    reason VARCHAR(200),
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
+);
+
+13. Stock_Movement
+
+Q13. Create table stock_movement with NOT NULL constraint on movement_date.
+
+CREATE TABLE stock_movement (
+    movement_id INT PRIMARY KEY,
+    product_id INT,
+    branch_id INT,
+    movement_date DATE NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
+
+14. Inward
+
+Q14. Create table inward with a CHECK constraint on quantity_received.
+
+CREATE TABLE inward (
+    movement_id INT PRIMARY KEY,
+    supplier_id INT,
+    quantity_received INT CHECK (quantity_received > 0),
+    received_date DATE,
+    FOREIGN KEY (movement_id) REFERENCES stock_movement(movement_id),
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id)
+);
+
+15. Outward
+
+Q15. Create table outward with NOT NULL constraint on dispatch_date.
+
+CREATE TABLE outward (
+    movement_id INT PRIMARY KEY,
+    sale_id INT,
+    dispatch_date DATE NOT NULL,
+    delivery_address VARCHAR(200),
+    FOREIGN KEY (movement_id) REFERENCES stock_movement(movement_id),
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id)
+);
+

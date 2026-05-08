@@ -1,0 +1,418 @@
+//SINGLE ROW SUBQUERY
+
+
+SQL> SELECT MAX(salary) FROM employee;
+
+MAX(SALARY)
+-----------
+      60000
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary = (SELECT MAX(salary) FROM employee);
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+AJAY                                                   60000
+
+//MULTI ROW SUBQUERY
+
+SQL> SELECT product_id FROM supplies;
+
+PRODUCT_ID
+----------
+       101
+       102
+       103
+       104
+       105
+       106
+
+6 rows selected.
+
+
+SQL> SELECT product_name
+  2  FROM product
+  3  WHERE product_id IN (SELECT product_id FROM supplies );
+
+PRODUCT_NAME
+--------------------------------------------------
+Laptop
+Mouse
+Keyboard
+Printer+
+Scanner
+Router
+
+6 rows selected.
+
+//ANY
+//GREATER ANY
+
+SQL> SELECT salary FROM employee WHERE branch_id = 1;
+
+    SALARY
+----------
+     46000
+     45000
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary > ANY (SELECT salary FROM employee WHERE branch_id = 1 );
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+AJAY                                                    60000
+KARTHIK                                                 48000
+ARUN                                                    46000
+MAHESH                                                  46000
+
+//LESS ANY
+
+SQL> SELECT salary FROM employee WHERE branch_id = 1;
+
+    SALARY
+----------
+     46000
+     45000
+
+
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary < ANY (SELECT salary FROM employee WHERE branch_id = 1 );
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+SATHISH                                                 22000
+SATHISH                                                 22000
+RAVI                                                    25000
+RAVI                                                    26000
+MANI                                                    28000
+MANI                                                    28000
+KUMAR                                                   35000
+VIGNESH                                                 35000
+KUMAR                                                   35000
+PRAVEEN                                                 35000
+RAHUL                                                   35000
+
+16 rows selected.
+
+// EQUAL ANY
+
+
+
+SQL> SELECT salary FROM employee WHERE branch_id = 1;
+
+    SALARY
+----------
+     46000
+     45000
+
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary = ANY (SELECT salary FROM employee WHERE branch_id = 1 );
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+ARUN                                                    46000
+MAHESH                                                  46000
+ARUN                                                    45000
+ARUN                                                    45000
+DINESH                                                  45000
+
+//ALL
+//LESS ALL
+
+SQL> SELECT salary FROM employee WHERE branch_id = 2;
+
+    SALARY
+----------
+     35000
+     35000
+     35000
+
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary < ALL ( SELECT salary FROM employee WHERE branch_id = 2);
+
+
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+MANI                                                    28000
+MANI                                                    28000
+RAVI                                                    26000
+RAVI                                                    25000
+SATHISH                                                 22000
+SATHISH                                                 22000
+
+6 rows selected.
+
+//GREATER ALL
+
+SELECT salary FROM employee WHERE branch_id = 2
+ SALARY
+------
+ 28000
+ 28000
+ 26000
+ 25000
+ 22000
+ 22000
+
+
+
+SQL> SELECT employee_name, salary
+  2  FROM employee
+  3  WHERE salary > ALL (
+  4      SELECT salary FROM employee WHERE branch_id = 2 );
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+AJAY                                                    60000
+
+
+//EQUAL ALL  (//UPDATE ALL EMPLOYEE SALARY IN BRANCH 2 EQUAL TO 35000 TO STATISFY CONDITION)
+
+SQL> SELECT salary FROM employee WHERE branch_id = 2;
+
+    SALARY
+----------
+     35000
+     35000
+     35000
+     35000
+     35000
+     35000
+     35000
+
+7 rows selected.
+
+SQL> SELECT employee_name, salary
+  2  FROM employee
+  3  WHERE salary = ALL (
+  4      SELECT salary FROM employee WHERE branch_id = 2 );
+
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+KUMAR                                                   35000
+KUMAR                                                   35000
+VIJAY                                                   35000
+SURESH                                                  35000
+
+7 rows selected.
+
+// MULTI COLUMN SUBQUERY
+
+SQL> SELECT supplier_id, product_id FROM supplies ;
+
+SUPPLIER_ID PRODUCT_ID
+----------- ----------
+          1        101
+          2        102
+          2        103
+          3        104
+          3        105
+          4        106
+
+6 rows selected.
+
+SQL> SELECT supplier_id, product_id
+  2  FROM supplies
+  3  WHERE (supplier_id, product_id) IN (SELECT supplier_id, product_id FROM supplies );
+
+SUPPLIER_ID PRODUCT_ID
+----------- ----------
+          1        101
+          2        102
+          2        103
+          3        104
+          3        105
+          4        106
+
+6 rows selected.
+
+// CORRELATED SUBQUERY
+
+
+SQL> SELECT e.employee_name, e.salary
+  2  FROM employee e
+  3  WHERE e.salary > (SELECT AVG(e2.salary) FROM employee e2 WHERE e2.branch_id = e.branch_id );
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+ARUN                                                    46000
+AJAY                                                    60000
+KARTHIK                                                 48000
+MAHESH                                                  46000
+DINESH                                                  45000
+
+
+//EXISTS(Find customers who have contact details)
+
+SQL> SELECT customer_name
+  2  FROM customer c
+  3  WHERE EXISTS (
+  4      SELECT 1
+  5      FROM customer_contact cc
+  6      WHERE cc.customer_id = c.customer_id );
+
+CUSTOMER_NAME
+--------------------------------------------------
+RAJESH
+ANITA
+SURESH
+MEENA
+KARTHIK
+PRIYA
+
+6 rows selected.
+
+// NOT EXISTS(Find customers who do not have contact details)
+
+SQL> SELECT customer_name
+  2  FROM customer c
+  3  WHERE NOT EXISTS (
+  4      SELECT 1
+  5      FROM customer_contact cc
+  6      WHERE cc.customer_id = c.customer_id );
+
+CUSTOMER_NAME
+--------------------------------------------------
+KARTHI
+
+//WITH CLAUSE
+
+SQL> SELECT AVG(salary) AS avg_salary FROM employee;
+
+AVG_SALARY
+----------
+     36550
+
+
+SQL> WITH AvgSal AS (
+  2      SELECT AVG(salary) AS avg_salary FROM employee
+  3  )
+  4  SELECT employee_name, salary
+  5  FROM employee WHERE salary > (SELECT avg_salary FROM AvgSal);
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+ARUN                                                    46000
+AJAY                                                    60000
+KARTHIK                                                 48000
+MAHESH                                                  46000
+DINESH                                                  45000
+
+7 rows selected.
+
+//MUTLIPLE WITH CLAUSE
+
+SQL> SELECT branch_id, COUNT(*) AS emp_count  FROM employee GROUP BY branch_id ;
+
+ BRANCH_ID  EMP_COUNT
+---------- ----------
+         1          2
+         2          7
+         3          4
+         7          1
+         8          1
+         9          1
+         4          2
+         5          2
+
+8 rows selected.
+
+
+SQL> WITH BranchCount AS (
+  2      SELECT branch_id, COUNT(*) AS emp_count  FROM employee GROUP BY branch_id
+  5  ),
+  6  AvgCount AS (
+  7      SELECT AVG(emp_count) AS avg_count FROM BranchCount
+  8  )
+  9  SELECT branch_id, emp_count
+ 10  FROM BranchCount
+ 11  WHERE emp_count > (SELECT avg_count FROM AvgCount);
+
+ BRANCH_ID  EMP_COUNT
+---------- ----------
+         3          4
+         2          7
+
+
+// SCALAR SUBQUERY
+
+SQL> SELECT s.supplier_name,
+  2         (SELECT COUNT(*)
+  3          FROM supplies sp
+  4          WHERE sp.supplier_id = s.supplier_id) AS product_count
+  5  FROM supplier s;
+
+SUPPLIER_NAME                                      PRODUCT_COUNT
+-------------------------------------------------- -------------
+ABC SUPPLIERS                                                  1
+XYZ TRADERS                                                    2
+NOVA DISTRIBUTORS                                              2
+STAR SUPPLY                                                    1
+
+
+//FROM/SELECT
+
+SQL> select * from supplier where supplier_id between 5 and 10;
+
+SUPPLIER_ID SUPPLIER_NAME
+----------- --------------------------------------------------
+SUPPLIER_PHONE_NUMBE SUPPLIER_EMAIL
+-------------------- --------------------------------------------------
+          5 OMEGA CORP
+9554433221           omega@gmail.com
+
+          6 DELTA ENTERPRISES
+9445566778           delta@gmail.com
+
+          7 SUNRISE SUPPLIES
+9332211445           sunrise@gmail.com
+
+
+SQL> SELECT supplier_name FROM (select * from supplier where supplier_id between 5 and 10);
+
+SUPPLIER_NAME
+--------------------------------------------------
+OMEGA CORP
+DELTA ENTERPRISES
+SUNRISE SUPPLIES
+PRIME INDUSTRIES
+GLOBAL MART
+EVEREST TRADERS
+
+6 rows selected.
+
+
+SQL>  SELECT (SELECT AVG(SALARY) FROM EMPLOYEE) FROM  EMPLOYEE WHERE EMPLOYEE_ID BETWEEN 5 AND 10;
+
+(SELECTAVG(SALARY)FROMEMPLOYEE)
+-------------------------------
+                          36550
+                          36550
+                          36550
+                          36550
+                          36550
+                          36550
+
+6 rows selected.
+
+//LESS ALL
+
+SQL> SELECT salary FROM employee WHERE branch_id = 2;
+
+    SALARY
+----------
+     27000
+     35000
+     35000
+
+SQL> SELECT employee_name, salary FROM employee WHERE salary < ALL ( SELECT salary FROM employee WHERE branch_id = 2);
+
+EMPLOYEE_NAME                                          SALARY
+-------------------------------------------------- ----------
+RAVI                                                    26000
+RAVI                                                    25000
+SATHISH                                                 22000
+SATHISH                                                 22000
+
+
+

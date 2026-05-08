@@ -1,0 +1,1002 @@
+TO INSERT ROWS INTO CUSTOMER(NO PARAMETER)
+
+ SQL> CREATE OR REPLACE PROCEDURE p1
+  2  IS
+  3  BEGIN
+  4    INSERT INTO customer (customer_id, customer_name, customer_email)
+  5    VALUES (101, 'Wasi Sundhar', 'wasi@gmail.com');
+  6  END p1;
+  7  /
+
+Procedure created.
+
+SQL> EXEC p1;
+
+PL/SQL procedure successfully completed.
+
+
+SQL> select * from customer where customer_id = 101;
+
+CUSTOMER_ID CUSTOMER_NAME
+----------- --------------------------------------------------
+CUSTOMER_EMAIL
+--------------------------------------------------
+        101 Wasi Sundhar
+wasi@gmail.com
+
+
+TO DISPALY SIMPLE MESSAGE(NO PARAMETER)
+
+SQL>  create or replace procedure hello
+  2      is
+  3      begin
+  4      dbms_output.put_line('EXERCISE COMPLETED');
+  5      end hello;
+  6      /
+
+Procedure created.
+
+
+SQL> exec hello;
+EXERCISE COMPLETED
+
+PL/SQL procedure successfully completed.
+
+TO INSERT ROW INTO CUSTOMER (IN PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE p2(
+  2    id   IN NUMBER,
+  3    name IN VARCHAR2
+  4  )
+  5  IS
+  6  BEGIN
+  7    INSERT INTO customer (customer_id, customer_name)
+  8    VALUES (id, name);
+  9  END p2;
+ 10  /
+
+Procedure created.
+
+SQL> EXEC p2(47, 'MS DHONI');
+
+PL/SQL procedure successfully completed.
+
+  PATTERN nXn(IN PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE star(n IN NUMBER)
+  2  IS
+  3  BEGIN
+  4    FOR i IN 1..n LOOP
+  5      FOR j IN 1..i LOOP
+  6        DBMS_OUTPUT.PUT(' * ');
+  7      END LOOP;
+  8      DBMS_OUTPUT.NEW_LINE;
+  9    END LOOP;
+ 10  END star;
+ 11  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    n NUMBER;
+  3  BEGIN
+  4    n := &n;
+  5    star(n);
+  6  END;
+  7  /
+Enter value for n: 3
+old   4:   n := &n;
+new   4:   n := 3;
+*
+*  *
+*  *  *
+
+PL/SQL procedure successfully completed.
+
+Enter value for n: 5
+
+old   4:   n := &n;
+new   4:   n := 5;
+*
+*  *
+*  *  *
+*  *  *  *
+*  *  *  *  *
+
+PL/SQL procedure successfully completed.
+ 
+ TO GET CUSTOMER _ID AND RETURN THEIR NAME(IN PARAMETER,OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE p3( id   IN NUMBER, name OUT VARCHAR2 )
+  2  IS
+  3  BEGIN
+  4    SELECT customer_name
+  5    INTO name
+  6    FROM customer
+  7    WHERE customer_id = id;
+  8  END p3;
+  9 /
+
+Procedure created.
+
+SQL> DECLARE
+  2    id   NUMBER;
+  3    name VARCHAR2(50);
+  4  BEGIN
+  5    id := &id;
+  6    p3(id, name);
+  7    DBMS_OUTPUT.PUT_LINE('NAME: ' || name);
+  8  END;
+  9  /
+
+Enter value for id: 2
+old   5:   id := &id;
+new   5:   id := 2;
+NAME: ANITA
+
+PL/SQL procedure successfully completed.
+
+
+Enter value for id: 8
+old   5:   id := &id;
+new   5:   id := 8;
+DECLARE
+*
+ERROR at line 1:
+ORA-01403: no data found
+ORA-06512: at "SYSTEM.P3", line 7
+ORA-06512: at line 6
+
+
+Enter value for id: 3
+old   5:   id := &id;
+new   5:   id := 3;
+NAME: SURESH
+
+PL/SQL procedure successfully completed.
+
+
+ ODD OR EVEN (IN PARAMETER ,OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE check_num(
+  2    num IN NUMBER,
+  3    ans OUT VARCHAR2
+  4  )
+  5  IS
+  6  BEGIN
+  7    IF num = 0 THEN
+  8      ans := 'ZERO';
+  9    ELSIF MOD(num, 2) = 0 THEN
+ 10      ans := 'EVEN';
+ 11    ELSE
+ 12      ans := 'ODD';
+ 13    END IF;
+ 14  END;
+ 15  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    num NUMBER;
+  3    ans VARCHAR2(20);
+  4  BEGIN
+  5    num := &num;
+  6    check_num(num, ans);
+  7    DBMS_OUTPUT.PUT_LINE('THE NUMBER ' || num || ' IS ' || ans);
+  8  END;
+  9  /
+Enter value for num: 0
+old   5:   num := &num;
+new   5:   num := 0;
+THE NUMBER 0 IS ZERO
+
+PL/SQL procedure successfully completed.
+
+Enter value for num: 7
+old   5:   num := &num;
+new   5:   num := 7;
+THE NUMBER 7 IS ODD
+
+PL/SQL procedure successfully completed.
+
+Enter value for num: 4
+old   5:   num := &num;
+new   5:   num := 4;
+THE NUMBER 4 IS EVEN
+
+PL/SQL procedure successfully completed.
+
+
+TO GET CUSTOMER_ID AND NAME AND RETURN THEIR CITY AND AGE (IN OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE p4(id IN OUT NUMBER, name IN OUT VARCHAR2 )
+  2  IS
+  3  BEGIN
+  4    SELECT c.customer_id, cc.address_city
+  5    INTO id, name
+  6    FROM customer c
+  7    JOIN customer_contact cc
+  8      ON c.customer_id = cc.customer_id
+  9    WHERE c.customer_id = id
+ 10      AND c.customer_name = name;
+ 11  END p4;
+ 12  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    id   NUMBER;
+  3    name VARCHAR2(50);
+  4  BEGIN
+  5    id := &id;
+  6    name := '&name';
+  7    p4(id, name);
+  8    DBMS_OUTPUT.PUT_LINE('CITY: ' || name || ' ID: ' || id);
+  9  END;
+ 10  /
+
+Enter value for id: 2
+old   5:   id := &id;
+new   5:   id := 2;
+Enter value for name: ANITA
+old   6:   name := '&name';
+new   6:   name := 'ANITA';
+CITY: MADURAI ID: 2
+
+PL/SQL procedure successfully completed.
+
+Enter value for id: 3
+old   5:   id := &id;
+new   5:   id := 3;
+Enter value for name: SURESH
+old   6:   name := '&name';
+new   6:   name := 'SURESH';
+CITY: VIRUDUNAGAR ID: 3
+
+PL/SQL procedure successfully completed.
+
+
+ FIBONACCI  OF NUMBER(IN OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE fib(n IN OUT NUMBER)
+  2  IS
+  3    a NUMBER := 0;
+  4    b NUMBER := 1;
+  5    c NUMBER;
+  6  BEGIN
+  7    IF n >= 1 THEN
+  8      DBMS_OUTPUT.PUT_LINE(a);
+  9    END IF;
+ 10    IF n >= 2 THEN
+ 11      DBMS_OUTPUT.PUT_LINE(b);
+ 12    END IF;
+ 13    FOR i IN 3..n LOOP
+ 14      c := a + b;
+ 15      DBMS_OUTPUT.PUT_LINE(c);
+ 16      a := b;
+ 17      b := c;
+ 18    END LOOP;
+ 19  END fib;
+ 20  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    num NUMBER;
+  3  BEGIN
+  4    num := &num;
+  5    DBMS_OUTPUT.PUT_LINE('FIBONACCI SERIES:');
+  6    fib(num);
+  7  END;
+  8  /
+Enter value for num: 5
+old   4:   num := &num;
+new   4:   num := 5;
+FIBONACCI SERIES:
+0
+1
+1
+2
+3
+
+PL/SQL procedure successfully completed.
+
+ TO DISPLAY THE VALUES IN RECORD BY CURSOR(OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE p5(c_cursor OUT SYS_REFCURSOR)
+  2  IS
+  3  BEGIN
+  4    OPEN c_cursor FOR
+  5      SELECT employee_name, experience
+  6      FROM employee;
+  7  END p5;
+  8  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    v_cursor SYS_REFCURSOR;
+  3    name VARCHAR2(50);
+  4    exp  NUMBER;
+  5  BEGIN
+  6    p5(v_cursor);
+  7
+  8    LOOP
+  9      FETCH v_cursor INTO name, exp;
+ 10      EXIT WHEN v_cursor%NOTFOUND;
+ 11      DBMS_OUTPUT.PUT_LINE('NAME: ' || name || ' EXPERIENCE: ' || exp);
+ 12    END LOOP;
+ 13
+ 14    CLOSE v_cursor;
+ 15  END;
+ 16  /
+NAME: ARUN EXPERIENCE: 6
+NAME: KUMAR EXPERIENCE: 4
+NAME: RAVI EXPERIENCE: 3
+NAME: ARUN EXPERIENCE: 5
+NAME: MANI EXPERIENCE: 4
+NAME: SATHISH EXPERIENCE: 1
+NAME: ARUN EXPERIENCE: 5
+NAME: KUMAR EXPERIENCE: 3
+NAME: RAVI EXPERIENCE: 2
+NAME: SATHISH EXPERIENCE: 2
+NAME: MANI EXPERIENCE: 3
+NAME: VIJAY EXPERIENCE: 6
+NAME: AJAY EXPERIENCE: 7
+NAME: KARTHIK EXPERIENCE: 5
+NAME: SURESH EXPERIENCE: 4
+NAME: MAHESH EXPERIENCE: 6
+NAME: DINESH EXPERIENCE: 8
+NAME: RAHUL EXPERIENCE: 4
+NAME: PRAVEEN EXPERIENCE: 2
+NAME: VIGNESH EXPERIENCE: 4
+NAME: VISHNU EXPERIENCE: 3
+NAME: RAHUL EXPERIENCE: 5
+NAME: ARJUN EXPERIENCE: 2
+NAME: GOVRESH EXPERIENCE: 2
+
+PL/SQL procedure successfully completed.
+
+ TO READ ONLY FIRST 5 NAME FROM CUSTOMER (OUT PARAMETER)
+
+SQL> CREATE OR REPLACE PROCEDURE five(c_cursor OUT SYS_REFCURSOR)
+  2  IS
+  3  BEGIN
+  4    OPEN c_cursor FOR
+  5      SELECT customer_name
+  6      FROM customer
+  7      FETCH FIRST 5 ROWS ONLY;
+  8  END five;
+  9  /
+
+Procedure created.
+
+SQL> DECLARE
+  2    v_cursor SYS_REFCURSOR;
+  3    name VARCHAR2(50);
+  4  BEGIN
+  5    five(v_cursor);
+  6    LOOP
+  7      FETCH v_cursor INTO name;
+  8      EXIT WHEN v_cursor%NOTFOUND;
+  9      DBMS_OUTPUT.PUT_LINE('NAME: ' || name);
+ 10    END LOOP;
+ 11    CLOSE v_cursor;
+ 12  END;
+ 13  /
+NAME: RAJESH
+NAME: ANITA
+NAME: SURESH
+NAME: MEENA
+NAME: KARTHIK
+
+PL/SQL procedure successfully completed.
+
+
+ FUNCTION TO GET THE TOTAL NUMBER OF ROWS IN TABLE CUSTOMER (NO PARAMETER)
+
+SQL> CREATE OR REPLACE FUNCTION c_count
+  2  RETURN NUMBER
+  3  IS
+  4    c NUMBER;
+  5  BEGIN
+  6    SELECT COUNT(*) INTO c FROM customer;
+  7    RETURN c;
+  8  EXCEPTION
+  9    WHEN OTHERS THEN
+ 10      RETURN 0;
+ 11  END c_count;
+ 12  /
+
+Function created.
+
+SQL> BEGIN
+  2    DBMS_OUTPUT.PUT_LINE('TOTAL CUSTOMERS: ' || c_count);
+  3  END;
+  4  /
+TOTAL CUSTOMERS: 10
+
+PL/SQL procedure successfully completed.
+
+FUNCTION TO RETURN THE TOTAL NUMBER OF EMPLOYEE WHO IS HAVING SALARY GREATER THAN AVERAGE SALARY(NO PARAMETER)
+
+SQL> CREATE OR REPLACE FUNCTION av_salary RETURN NUMBER
+  2  IS
+  3    num NUMBER;
+  4  BEGIN
+  5    SELECT COUNT(*)
+  6    INTO num
+  7    FROM employee
+  8    WHERE salary > (SELECT AVG(salary) FROM employee);
+  9    RETURN num;
+ 10  EXCEPTION
+ 11    WHEN OTHERS THEN
+ 12      RETURN NULL;
+ 13  END av_salary;
+ 14  /
+
+Function created.
+
+SQL> SET SERVEROUTPUT ON;
+SQL>
+SQL> BEGIN
+  2    DBMS_OUTPUT.PUT_LINE('COUNT: ' || av_salary);
+  3  END;
+  4  /
+COUNT: 9
+
+PL/SQL procedure successfully completed.
+
+SQL> select count(*) from employee where salary>(select avg(salary) from employee);
+
+  COUNT(*)
+----------
+         9
+
+
+ FUNCTION TO GET CUSTOMER_ID FROM CUSTOMER AND RETURN NAME OF THAT PARTICULAR CUSTOMER(SINGLE PARAMETER)
+
+SQL> CREATE OR REPLACE FUNCTION r_name(id IN NUMBER) RETURN VARCHAR2
+  2  IS
+  3    v_name VARCHAR2(50);
+  4  BEGIN
+  5    SELECT customer_name
+  6    INTO v_name
+  7    FROM customer
+  8    WHERE customer_id = id;
+  9    RETURN v_name;
+ 10  EXCEPTION
+ 11    WHEN OTHERS THEN
+ 12      RETURN NULL;
+ 13  END r_name;
+ 14  /
+
+Function created.
+
+SQL> DECLARE
+  2    n NUMBER;
+  3  BEGIN
+  4    n := &n;
+  5    DBMS_OUTPUT.PUT_LINE('NAME OF ' || n || ' IS ' || r_name(n));
+  6  END;
+  7  /
+Enter value for n: 3
+old   4:   n := &n;
+new   4:   n := 3;
+NAME OF 3 IS SURESH
+
+PL/SQL procedure successfully completed.
+
+
+PALINDROME OR NOT (SINGLE PARAMETER)
+
+SQL> CREATE OR REPLACE FUNCTION pal(n IN NUMBER)
+  2  RETURN VARCHAR2
+  3  IS
+  4    num NUMBER := n;
+  5    rev NUMBER := 0;
+  6    rem NUMBER;
+  7  BEGIN
+  8    WHILE num != 0 LOOP
+  9      rem := MOD(num, 10);
+ 10      rev := rev * 10 + rem;
+ 11      num := TRUNC(num / 10);
+ 12    END LOOP;
+ 13    IF rev = n THEN
+ 14      RETURN 'PALINDROME';
+ 15    ELSE
+ 16      RETURN 'NOT PALINDROME';
+ 17    END IF;
+ 18  END pal;
+ 19  /
+
+Function created.
+
+SQL> DECLARE
+  2    n NUMBER;
+  3  BEGIN
+  4    n := &n;
+  5    DBMS_OUTPUT.PUT_LINE('THE NUMBER ' || n || ' IS ' || pal(n));
+  6  END;
+  7  /
+Enter value for n: 121
+old   4:   n := &n;
+new   4:   n := 121;
+THE NUMBER 121 IS PALINDROME
+
+
+Enter value for n: 123
+old   4:   n := &n;
+new   4:   n := 123;
+THE NUMBER 123 IS NOT PALINDROME
+
+PL/SQL procedure successfully completed.
+
+ FUNCTION TO COUNT THE NUMBER OF EMPLOYEE IN SPECIFIED CITY AND EXPERIENCE MUST BE GREATER THAN THE GIVEN EXPERIENCE (MULTI PARAMETERS)
+
+SQL> CREATE OR REPLACE FUNCTION city_count( city IN VARCHAR2,a  IN NUMBER )
+  2  RETURN NUMBER
+  3  IS
+  4    n NUMBER;
+  5  BEGIN
+  6    SELECT COUNT(*)
+  7    INTO n
+  8    FROM employee
+  9    WHERE employee_city = city
+ 10      AND experience > a;
+ 11    RETURN n;
+ 12  EXCEPTION
+ 13    WHEN OTHERS THEN
+ 14      RETURN 0;
+ 15  END city_count;
+ 16  /
+
+Function created.
+
+SQL> DECLARE
+  2    exp NUMBER;
+  3  BEGIN
+  4    exp := &exp;
+  5    DBMS_OUTPUT.PUT_LINE(
+  6      'NUMBER OF EMPLOYEES IN CHENNAI WITH EXP ' || exp ||
+  7      ' IS ' || city_count('sivakasi', exp)
+  8    );
+  9  END;
+ 10  /
+Enter value for exp: 2
+old   4:   exp := &exp;
+new   4:   exp := 2;
+NUMBER OF EMPLOYEES IN CHENNAI WITH EXP 3 IS 4
+
+PL/SQL procedure successfully completed.
+
+TO DISPLAY THE DETAIL OF EMPLOYEE(RETURN ROWTYPE)
+
+SQL> CREATE OR REPLACE FUNCTION r_row(id IN NUMBER) RETURN employee%ROWTYPE
+  2  IS
+  3    r employee%ROWTYPE;
+  4  BEGIN
+  5    SELECT *
+  6    INTO r
+  7    FROM employee
+  8    WHERE employee_id = id;
+  9    RETURN r;
+ 10  EXCEPTION
+ 11    WHEN OTHERS THEN
+ 12      RETURN NULL;
+ 13  END r_row;
+ 14  /
+
+Function created.
+
+SQL> DECLARE
+  2    n   NUMBER;
+  3    ans employee%ROWTYPE;
+  4  BEGIN
+  5    n := &n;
+  6    ans := r_row(n);
+  7    DBMS_OUTPUT.PUT_LINE(
+  8      'NAME: ' || ans.employee_name ||
+  9      ' ROLE: ' || ans.role ||
+ 10      ' CITY: ' || ans.employee_city
+ 11    );
+ 12  END;
+ 13  /
+Enter value for n: 25
+old   5:   n := &n;
+new   5:   n := 25;
+NAME: VISHNU ROLE: MANAGER CITY: SIVAKASI
+
+Enter value for n: 47
+old   5:   n := &n;
+new   5:   n := 47;
+NAME: RAHUL ROLE: MANAGER CITY: SIVAKASI
+
+PL/SQL procedure successfully completed.
+
+
+PL/SQL procedure successfully completed.
+
+
+ TO DISPLAY THE DEATILS OF THE CUSTOMERS (RETURN CURSOR)
+
+SQL> CREATE OR REPLACE FUNCTION f1
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    c_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6    OPEN c_cursor FOR
+  7      SELECT customer_name, customer_id
+  8      FROM customer;
+  9    RETURN c_cursor;
+ 10  END f1;
+ 11  /
+
+Function created.
+
+SQL> DECLARE
+  2    ans SYS_REFCURSOR;
+  3    v_name VARCHAR2(50);
+  4    id NUMBER;
+  5  BEGIN
+  6    ans := f1;
+  7    LOOP
+  8      FETCH ans INTO v_name, id;
+  9      EXIT WHEN ans%NOTFOUND;
+ 10      DBMS_OUTPUT.PUT_LINE('NAME: ' || v_name || ' USER ID: ' || id);
+ 11    END LOOP;
+ 12
+ 13    CLOSE ans;
+ 14  END;
+ 15  /
+NAME: RAJESH USER ID: 1
+NAME: ANITA USER ID: 2
+NAME: SURESH USER ID: 3
+NAME: MEENA USER ID: 4
+NAME: KARTHIK USER ID: 5
+NAME: PRIYA USER ID: 6
+NAME: KARTHI USER ID: 7
+NAME: Test Customer USER ID: 900
+NAME: Wasi Sundhar USER ID: 101
+NAME: MS DHONI USER ID: 47
+
+PL/SQL procedure successfully completed.
+
+
+ TO FIND THE FACTORIAL OF N NUMBERS(RECURSIVE)
+
+
+SQL> CREATE OR REPLACE FUNCTION fact_recur(n IN NUMBER)
+  2  RETURN NUMBER
+  3  IS
+  4  BEGIN
+  5    IF n <= 1 THEN
+  6      RETURN 1;
+  7    ELSE
+  8      RETURN n * fact_recur(n - 1);
+  9    END IF;
+ 10  END;
+ 11  /
+
+Function created.
+
+SQL> DECLARE
+  2    n NUMBER;
+  3  BEGIN
+  4    n := &n;
+  5    DBMS_OUTPUT.PUT_LINE('FACTORIAL OF ' || n || ' IS ' || fact_recur(n));
+  6  END;
+  7  /
+Enter value for n: 5
+old   4:   n := &n;
+new   4:   n := 5;
+FACTORIAL OF 5 IS 120
+
+PL/SQL procedure successfully completed.
+
+
+//HACKER RANK**************
+
+
+1 A) Write a PL/SQL procedure to display the employee IDs, names, job titles, hire dates, and salaries of all employees.
+
+SQL> CREATE OR REPLACE PROCEDURE show_employee_details
+  2  IS
+  3    CURSOR emp_cursor IS
+  4      SELECT employee_id,
+  5             employee_name,
+  6             role,
+  7             join_date,
+  8             salary
+  9      FROM employee;
+ 10    v_id     employee.employee_id%TYPE;
+ 11    v_name   employee.employee_name%TYPE;
+ 12    v_role   employee.role%TYPE;
+ 13    v_date   employee.join_date%TYPE;
+ 14    v_salary employee.salary%TYPE;
+ 15  BEGIN
+ 16    OPEN emp_cursor;
+ 17    LOOP
+ 18      FETCH emp_cursor INTO v_id, v_name, v_role, v_date, v_salary;
+ 19      EXIT WHEN emp_cursor%NOTFOUND;
+ 20
+ 21      DBMS_OUTPUT.PUT_LINE(
+ 22        'ID: ' || v_id ||
+ 23        ' NAME: ' || v_name ||
+ 24        ' ROLE: ' || v_role ||
+ 25        ' JOIN DATE: ' || v_date ||
+ 26        ' SALARY: ' || v_salary
+ 27      );
+ 28    END LOOP;
+ 29    CLOSE emp_cursor;
+ 30  END;
+ 31  /
+
+Procedure created.
+
+SQL> SET SERVEROUTPUT ON;
+SQL>
+SQL> BEGIN
+  2    show_employee_details;
+  3  END;
+  4  /
+ID: 6 NAME: ARUN ROLE: MANAGER JOIN DATE: 12-JAN-24 SALARY: 46000
+ID: 7 NAME: KUMAR ROLE: SUPERVISOR JOIN DATE: 01-FEB-23 SALARY: 35000
+ID: 8 NAME: RAVI ROLE: CLERK JOIN DATE: 10-MAR-24 SALARY: 26000
+ID: 9 NAME: ARUN ROLE: MANAGER JOIN DATE: 05-MAY-22 SALARY: 45000
+ID: 10 NAME: MANI ROLE: DRIVER JOIN DATE: 08-JUN-23 SALARY: 28000
+ID: 11 NAME: SATHISH ROLE: WORKER JOIN DATE: 12-JUL-24 SALARY: 22000
+ID: 1 NAME: ARUN ROLE: MANAGER JOIN DATE: 10-JAN-21 SALARY: 45000
+ID: 2 NAME: KUMAR ROLE: SUPERVISOR JOIN DATE: 15-FEB-22 SALARY: 35000
+ID: 3 NAME: RAVI ROLE: CLERK JOIN DATE: 20-MAR-23 SALARY: 25000
+ID: 4 NAME: SATHISH ROLE: WORKER JOIN DATE: 18-APR-23 SALARY: 22000
+ID: 5 NAME: MANI ROLE: DRIVER JOIN DATE: 25-MAY-22 SALARY: 28000
+ID: 12 NAME: VIJAY ROLE: MANAGER JOIN DATE: 10-JAN-23 SALARY: 35000
+ID: 13 NAME: AJAY ROLE: SUPERVISOR JOIN DATE: 15-FEB-24 SALARY: 60000
+ID: 14 NAME: KARTHIK ROLE: MANAGER JOIN DATE: 20-MAR-23 SALARY: 48000
+ID: 15 NAME: SURESH ROLE: MANAGER JOIN DATE: 10-APR-23 SALARY: 35000
+ID: 16 NAME: MAHESH ROLE: SUPERVISOR JOIN DATE: 12-MAY-24 SALARY: 46000
+ID: 17 NAME: DINESH ROLE: MANAGER JOIN DATE: 15-JUN-23 SALARY: 45000
+ID: 18 NAME: RAHUL ROLE: SUPERVISOR JOIN DATE: 01-JAN-24 SALARY: 35000
+ID: 19 NAME: PRAVEEN ROLE: SUPERVISOR JOIN DATE: 05-FEB-24 SALARY: 35000
+ID: 20 NAME: VIGNESH ROLE: SUPERVISOR JOIN DATE: 10-MAR-24 SALARY: 35000
+ID: 25 NAME: VISHNU ROLE: MANAGER JOIN DATE: 25-MAR-26 SALARY: 70000
+ID: 47 NAME: RAHUL ROLE: MANAGER JOIN DATE: 25-MAR-26 SALARY: 55000
+ID: 102 NAME: ARJUN ROLE: CLERK JOIN DATE: 26-MAR-26 SALARY: 25000
+ID: 48 NAME: GOVRESH ROLE: CLERK JOIN DATE: 26-MAR-26 SALARY: 25000
+
+PL/SQL procedure successfully completed.
+ 
+
+1 B)Write a PL/SQL function to display the job titles of all employees. Return a heading of job title.
+
+SQL> CREATE OR REPLACE FUNCTION show_job_titles
+  2  RETURN VARCHAR2
+  3  IS
+  4  BEGIN
+  5    FOR rec IN (SELECT role FROM employee) LOOP
+  6      DBMS_OUTPUT.PUT_LINE(rec.role);
+  7    END LOOP;
+  8    RETURN 'JOB TITLES';
+  9  END;
+ 10  /
+
+Function created.
+
+SQL> BEGIN
+  2    DBMS_OUTPUT.PUT_LINE(show_job_titles);
+  3  END;
+  4  /
+CLERK
+CLERK
+CLERK
+CLERK
+DRIVER
+DRIVER
+MANAGER
+MANAGER
+MANAGER
+MANAGER
+MANAGER
+
+PL/SQL procedure successfully completed.
+
+2 A)Write a PL/SQL procedure to display the employees who have the highest salary in each city using a nested while loop.
+
+SQL> CREATE OR REPLACE PROCEDURE max_salary_city
+  2  IS
+  3    CURSOR c_city IS
+  4      SELECT DISTINCT employee_city FROM employee;
+  5    CURSOR c_emp(cname VARCHAR2) IS
+  6      SELECT employee_id, employee_name, salary
+  7      FROM employee
+  8      WHERE employee_city = cname;
+  9    v_city employee.employee_city%TYPE;
+ 10    v_id     employee.employee_id%TYPE;
+ 11    v_name   employee.employee_name%TYPE;
+ 12    v_salary employee.salary%TYPE;
+ 13    max_sal NUMBER;
+ 14  BEGIN
+ 15    OPEN c_city;
+ 16    LOOP
+ 17      FETCH c_city INTO v_city;
+ 18      EXIT WHEN c_city%NOTFOUND;
+ 19      SELECT MAX(salary)
+ 20      INTO max_sal
+ 21      FROM employee
+ 22      WHERE employee_city = v_city;
+ 23      DBMS_OUTPUT.PUT_LINE('--- CITY: ' || v_city || ' ---');
+ 24      OPEN c_emp(v_city);
+ 25      LOOP
+ 26        FETCH c_emp INTO v_id, v_name, v_salary;
+ 27        EXIT WHEN c_emp%NOTFOUND;
+ 28        IF v_salary = max_sal THEN
+ 29          DBMS_OUTPUT.PUT_LINE(
+ 30            'ID: ' || v_id ||
+ 31            ' NAME: ' || v_name ||
+ 32            ' SALARY: ' || v_salary
+ 33          );
+ 34        END IF;
+ 35      END LOOP;
+ 36      CLOSE c_emp;
+ 37    END LOOP;
+ 38    CLOSE c_city;
+ 39  END;
+ 40  /
+
+Procedure created.
+
+SQL> BEGIN
+  2    max_salary_city;
+  3  END;
+  4  /
+--- CITY: SIVAKASI ---
+ID: 25 NAME: VISHNU SALARY: 70000
+--- CITY:  ---
+--- CITY: MADURAI ---
+ID: 2 NAME: KUMAR SALARY: 35000
+--- CITY: TRICHY ---
+ID: 3 NAME: RAVI SALARY: 25000
+--- CITY: SALEM ---
+ID: 4 NAME: SATHISH SALARY: 22000
+--- CITY: COIMBATORE ---
+ID: 5 NAME: MANI SALARY: 28000
+
+PL/SQL procedure successfully completed.
+
+2 B)Write a PL/SQL function to display the average salary for each role. Return role title and average salary in a row.
+
+SQL> CREATE OR REPLACE FUNCTION avg_salary_role RETURN SYS_REFCURSOR
+  2  IS
+  3    c_cursor SYS_REFCURSOR;
+  4  BEGIN
+  5    OPEN c_cursor FOR
+  6      SELECT role, TRUNC(AVG(salary)) AS avg_salary
+  7      FROM employee
+  8      GROUP BY role;
+  9    RETURN c_cursor;
+ 10  END;
+ 11  /
+
+Function created.
+
+SQL> DECLARE
+  2    c SYS_REFCURSOR;
+  3    v_role VARCHAR2(20);
+  4    v_avg  NUMBER;
+  5  BEGIN
+  6    c := avg_salary_role;
+  7    LOOP
+  8      FETCH c INTO v_role, v_avg;
+  9      EXIT WHEN c%NOTFOUND;
+ 10
+ 11      DBMS_OUTPUT.PUT_LINE(
+ 12        'ROLE: ' || v_role ||
+ 13        ' AVG SALARY: ' || v_avg
+ 14      );
+ 15    END LOOP;
+ 16    CLOSE c;
+ 17  END;
+ 18  /
+ROLE: MANAGER AVG SALARY: 47111
+ROLE: SUPERVISOR AVG SALARY: 40142
+ROLE: CLERK AVG SALARY: 25250
+ROLE: DRIVER AVG SALARY: 28000
+ROLE: WORKER AVG SALARY: 22000
+
+PL/SQL procedure successfully completed.
+
+3 A)Write a PL/SQL procedure to return the city name with the maximum number of employees.
+
+SQL> CREATE OR REPLACE PROCEDURE max_emp_city
+  2  IS
+  3    v_city employee.employee_city%TYPE;
+  4    v_count NUMBER;
+  5  BEGIN
+  6    SELECT employee_city, COUNT(*)
+  7    INTO v_city, v_count
+  8    FROM employee
+  9    GROUP BY employee_city
+ 10    ORDER BY COUNT(*) DESC
+ 11    FETCH FIRST 1 ROW ONLY;
+ 12    DBMS_OUTPUT.PUT_LINE(
+ 13      'CITY WITH MAX EMPLOYEES: ' || v_city ||
+ 14      ' (COUNT: ' || v_count || ')'
+ 15    );
+ 16  EXCEPTION
+ 17    WHEN OTHERS THEN
+ 18      DBMS_OUTPUT.PUT_LINE('ERROR OCCURRED');
+ 19  END;
+ 20  /
+
+Procedure created.
+
+SQL> BEGIN
+  2    max_emp_city;
+  3  END;
+  4  /
+CITY WITH MAX EMPLOYEES:  (COUNT: 11)
+
+PL/SQL procedure successfully completed.
+
+
+3 B)B)	Write a PL/SQL function to return the employee details whose salary is less than average salary of where ‘arun’ is working
+
+
+SQL> CREATE OR REPLACE FUNCTION emp_below_avg_arun
+  2  RETURN SYS_REFCURSOR
+  3  IS
+  4    v_cursor SYS_REFCURSOR;
+  5  BEGIN
+  6    OPEN v_cursor FOR
+  7      SELECT employee_name, salary, employee_city
+  8      FROM employee
+  9      WHERE salary < (
+ 10        SELECT AVG(salary)
+ 11        FROM employee
+ 12        WHERE employee_city = (
+ 13          SELECT employee_city
+ 14          FROM employee
+ 15          WHERE LOWER(employee_name) = 'arun'
+ 16            AND ROWNUM = 1
+ 17        )
+ 18      );
+ 19    RETURN v_cursor;
+ 20  END;
+ 21  /
+
+Function created.
+
+SQL> DECLARE
+  2    v_res SYS_REFCURSOR;
+  3    v_name employee.employee_name%TYPE;
+  4    v_salary employee.salary%TYPE;
+  5    v_city employee.employee_city%TYPE;
+  6  BEGIN
+  7    v_res := emp_below_avg_arun;
+  8    LOOP
+  9      FETCH v_res INTO v_name, v_salary, v_city;
+ 10      EXIT WHEN v_res%NOTFOUND;
+ 11      DBMS_OUTPUT.PUT_LINE(
+ 12        'NAME: ' || v_name ||
+ 13        ' | SALARY: ' || v_salary ||
+ 14        ' | CITY: ' || v_city
+ 15      );
+ 16    END LOOP;
+ 17    CLOSE v_res;
+ 18  END;
+ 19  /
+
+NAME: SATHISH | SALARY: 22000 | CITY: SALEM
+NAME: RAVI | SALARY: 25000 | CITY: TRICHY
+NAME: MANI | SALARY: 28000 | CITY: COIMBATORE
+NAME: KUMAR | SALARY: 35000 | CITY: MADURAI
+NAME: ARUN | SALARY: 45000 | CITY: SIVAKASI
+NAME: ARUN | SALARY: 45000 | CITY: SIVAKASI
+NAME: DINESH | SALARY: 45000 | CITY: SIVAKASI
+NAME: ARUN | SALARY: 46000 | CITY: SIVAKASI
+NAME: MAHESH | SALARY: 46000 | CITY: SIVAKASI
+NAME: KARTHIK | SALARY: 48000 | CITY: SIVAKASI
+
+PL/SQL procedure successfully completed.
+

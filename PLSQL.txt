@@ -1,0 +1,800 @@
+
+1) //UPDATE IN BLOCK
+
+SQL> select employee_name,employee_id,experience from employee where employee_id = 10;
+EMPLOYEE_NAME                                      EMPLOYEE_ID EXPERIENCE
+-------------------------------------------------- ----------- ----------
+MANI                                                        10          3
+
+SQL> DECLARE
+  2      v_emp_id employee.employee_id%TYPE := 10;
+  3  BEGIN
+  4      UPDATE employee
+  5      SET experience = experience + 1
+  6      WHERE employee_id = v_emp_id;
+  7      DBMS_OUTPUT.PUT_LINE('Experience updated for employee ' || v_emp_id);
+  8     COMMIT;
+  9  END;
+ 10  /
+Experience updated for employee 10
+
+
+PL/SQL procedure successfully completed.
+
+2)  //INSERT IN BLOCK
+
+SQL> select employee_name,employee_id,experience from employee where employee_id = 10;
+
+EMPLOYEE_NAME                                      EMPLOYEE_ID EXPERIENCE
+-------------------------------------------------- ----------- ----------
+MANI                                                        10          4
+
+
+
+SQL> DECLARE
+  2      v_sid supplier.supplier_id%TYPE := 25;
+  3      v_name supplier.supplier_name%TYPE := 'ABCD Traders';
+  4  BEGIN
+  5      INSERT INTO supplier(supplier_id, supplier_name, supplier_phone_number, supplier_email)
+  6      VALUES(v_sid, v_name, '9876543210', 'abcd@gmail.com');
+  7      DBMS_OUTPUT.PUT_LINE('Supplier inserted: ' || v_sid);
+  8      COMMIT;
+  9  END;
+ 10  /
+Supplier inserted: 25
+
+SQL> select * from supplier where supplier_id = 25;
+
+SUPPLIER_ID SUPPLIER_NAME
+----------- ------------------------------
+SUPPLIER_PHONE_NUMBE SUPPLIER_EMAIL
+-------------------- ---------------------
+         25 ABCD Traders
+9876543210           abcd@gmail.com
+
+3) //  %ROWTYPE
+
+SQL> DECLARE
+  2      v_emp employee%ROWTYPE;
+  3  BEGIN
+  4      SELECT *INTO  v_emp   FROM employee WHERE employee_id = 12 ;
+  5      DBMS_OUTPUT.PUT_LINE('Employee: ' || v_emp.employee_name ||
+  6                           ' Role: ' || v_emp.role);
+  7  END;
+  8  /
+Employee: VIJAY Role: MANAGER
+
+PL/SQL procedure successfully completed.
+
+SQL> select employee_name,role from employee where employee_id = 12;
+
+EMPLOYEE_NAME                                      ROLE
+-------------------------------------------------- --------------------
+VIJAY                                              MANAGER
+
+4) //AGGREGATE FUNCTION WITH 
+SQL> DECLARE
+  2      v_total NUMBER;
+  3      v_branch employee.branch_id%TYPE := 2;
+  4  BEGIN
+  5      SELECT COUNT(*) INTO v_total FROM employee WHERE branch_id = v_branch;
+  6     DBMS_OUTPUT.PUT_LINE('Total employees in branch ' || v_branch || ' = ' || v_total);
+  7  END;
+  8  /
+Total employees in branch 2 = 7
+
+PL/SQL procedure successfully completed.
+
+SQL> select count(employee_id) from employee where branch_id = 2;
+
+COUNT(EMPLOYEE_ID)
+------------------
+                 7
+
+5) // Exception Handling
+
+SQL> select vehicle_id,vehicle_number,type from vehicle where vehicle_id = 3;
+
+VEHICLE_ID VEHICLE_NUMBER
+---------- --------------------------------------------------
+TYPE
+--------------------
+         3 TN03EF9012
+TRUCK
+
+SQL> set serveroutput on;
+SQL> DECLARE
+  2      v_vehicle vehicle.vehicle_id%TYPE := 3;
+  3  BEGIN
+  4      UPDATE vehicle SET type = 'VAN' WHERE vehicle_id = v_vehicle;
+  5      IF SQL%NOTFOUND THEN
+  6          RAISE_APPLICATION_ERROR(-20001,'Vehicle not found');
+  7      END IF;
+  8
+  9      COMMIT;
+ 10  END;
+ 11  /
+
+PL/SQL procedure successfully completed.
+
+SQL> select vehicle_id,vehicle_number,type from vehicle where vehicle_id = 3;
+
+VEHICLE_ID VEHICLE_NUMBER
+---------- --------------------------------------------------
+TYPE
+--------------------
+         3 TN03EF9012
+VAN
+
+
+ 6) // Explicit Cursor
+
+SQL> DECLARE
+  2      CURSOR c_sup IS
+  3          SELECT supplier_name, supplier_email FROM supplier;
+  4       v_name supplier.supplier_name%TYPE;
+  5      v_email supplier.supplier_email%TYPE;
+  6  BEGIN
+  7      OPEN c_sup;
+  8
+  9      LOOP
+ 10         FETCH c_sup INTO v_name, v_email;
+ 11          EXIT WHEN c_sup%NOTFOUND;
+ 12
+ 13          DBMS_OUTPUT.PUT_LINE(v_name || ' - ' || v_email);
+ 14      END LOOP;
+ 15
+ 16      CLOSE c_sup;
+ 17  END;
+ 18  /
+ABC SUPPLIERS - abc@gmail.com
+XYZ TRADERS - xyz@gmail.com
+NOVA DISTRIBUTORS - nova@gmail.com
+STAR SUPPLY - star@gmail.com
+OMEGA CORP - omega@gmail.com
+DELTA ENTERPRISES - delta@gmail.com
+SUNRISE SUPPLIES - sunrise@gmail.com
+PRIME INDUSTRIES - prime@gmail.com
+GLOBAL MART - global@gmail.com
+EVEREST TRADERS - everest@gmail.com
+ABC SUPPLIERS - abc2@gmail.com
+XYZ TRADERS - xyz2@gmail.com
+OMEGA CORP - omega2@gmail.com
+DELTA ENTERPRISES - delta2@gmail.com
+ABCD Traders - abcd@gmail.com
+
+PL/SQL procedure successfully completed.
+
+
+7 ) //CURSOR FOR LOOP
+
+
+SQL> BEGIN
+  2      FOR emp_rec IN (SELECT employee_name, role FROM employee)
+  3      LOOP
+  4          DBMS_OUTPUT.PUT_LINE(emp_rec.employee_name || ' works as ' || emp_rec.role);
+  5      END LOOP;
+  6  END;
+  7  /
+ARUN works as MANAGER
+KUMAR works as SUPERVISOR
+RAVI works as CLERK
+ARUN works as MANAGER
+MANI works as DRIVER
+SATHISH works as WORKER
+ARUN works as MANAGER
+KUMAR works as SUPERVISOR
+RAVI works as CLERK
+SATHISH works as WORKER
+MANI works as DRIVER
+VIJAY works as MANAGER
+AJAY works as SUPERVISOR
+KARTHIK works as MANAGER
+SURESH works as MANAGER
+MAHESH works as SUPERVISOR
+DINESH works as MANAGER
+RAHUL works as SUPERVISOR
+PRAVEEN works as SUPERVISOR
+VIGNESH works as SUPERVISOR
+
+PL/SQL procedure successfully completed.
+
+
+8 )//Custom Record
+
+SQL> DECLARE
+  2      TYPE cust_rec IS RECORD(
+  3          cname customer.customer_name%TYPE,
+  4          cemail customer.customer_email%TYPE
+  5      );
+  6      v_customer cust_rec;
+  7  BEGIN
+  8      SELECT customer_name, customer_email INTO v_customer FROM customer WHERE ROWNUM = 1;
+  9      DBMS_OUTPUT.PUT_LINE('Customer: ' || v_customer.cname ||
+ 10                           ' Email: ' || v_customer.cemail);
+ 11  END;
+ 12  /
+
+
+Customer: RAJESH Email: rajesh@gmail.com
+
+PL/SQL procedure successfully completed.
+
+
+9)IF ELSIF AND ELSE
+
+DECLARE
+v_salary employee.salary%TYPE;
+BEGIN
+v_salary:=&salary;
+IF v_salary<20000 THEN
+DBMS_OUTPUT.PUT_LINE('Low Salary');
+ELSIF v_salary>=20000 AND v_salary<=50000 THEN
+DBMS_OUTPUT.PUT_LINE('Medium Salary');
+ELSE
+DBMS_OUTPUT.PUT_LINE('High Salary');
+END IF;
+END;
+/
+
+Enter value for salary: 10000
+old   4:   v_salary := &salary;
+new   4:   v_salary := 10000;
+Low Salary
+
+Enter value for salary: 21000
+old   4:   v_salary := &salary;
+new   4:   v_salary := 21000;
+Medium Salary
+
+Enter value for salary: 510000
+old   4:   v_salary := &salary;
+new   4:   v_salary := 510000;
+High Salary
+
+10) //CASE WHEN 
+
+SQL> DECLARE
+  2      v_salary employee.salary%TYPE;
+  3      v_cat VARCHAR2(20);
+  4  BEGIN
+  5      SELECT salary
+  6      INTO v_salary
+  7      FROM employee
+  8      WHERE employee_id = 1;
+  9      v_cat :=
+ 10          CASE
+ 11              WHEN v_salary < 20000 THEN 'LOW'
+ 12              WHEN v_salary BETWEEN 20000 AND 50000 THEN 'MEDIUM'
+ 13              ELSE 'HIGH'
+ 14          END;
+ 15
+ 16      DBMS_OUTPUT.PUT_LINE('Salary category: ' || v_cat);
+ 17  END;
+ 18  /
+Salary category: MEDIUM
+
+PL/SQL procedure successfully completed.
+
+//11.)EXPLICIT CURSOR ATTRIBUTES(%FOUND,%NOTFOUND,%ISOPEN,%ROWCOUNT)
+
+SQL> DECLARE
+  2  v_name employee.employee_name%TYPE;
+  3  v_exp employee.experience%TYPE;
+  4  CURSOR emp_cursor IS
+  5  SELECT employee_name,experience FROM employee;
+  6  BEGIN
+  7  OPEN emp_cursor;
+  8  FETCH emp_cursor INTO v_name,v_exp;
+  9  IF emp_cursor%FOUND THEN
+ 10  DBMS_OUTPUT.PUT_LINE('First row fetched:'||v_name);
+ 11  ELSE
+ 12  DBMS_OUTPUT.PUT_LINE('No row fetched');
+ 13  END IF;
+ 14  FETCH emp_cursor INTO v_name,v_exp;
+ 15  IF emp_cursor%FOUND THEN
+ 16  DBMS_OUTPUT.PUT_LINE('Second row fetched:'||v_name);
+ 17  ELSE
+ 18  DBMS_OUTPUT.PUT_LINE('No row fetched');
+ 19  END IF;
+ 20  IF emp_cursor%ISOPEN THEN
+ 21  DBMS_OUTPUT.PUT_LINE('Cursor is open');
+ 22  ELSE
+ 23  DBMS_OUTPUT.PUT_LINE('Cursor is not open');
+ 24  END IF;
+ 25  DBMS_OUTPUT.PUT_LINE('Number of rows fetched:'||emp_cursor%ROWCOUNT);
+ 26  CLOSE emp_cursor;
+ 27  IF emp_cursor%ISOPEN THEN
+ 28  DBMS_OUTPUT.PUT_LINE('Cursor is open');
+ 29  ELSE
+ 30  DBMS_OUTPUT.PUT_LINE('Cursor is closed');
+ 31  END IF;
+ 32  END;
+ 33  /
+First row fetched: ARUN
+Second row fetched: KUMAR
+Cursor is open
+Number of rows fetched: 2
+Cursor is closed
+
+PL/SQL procedure successfully completed.
+
+12)//WHILE LOOP
+
+PL/SQL procedure successfully completed.
+
+SQL> DECLARE
+  2      v_counter NUMBER := 1;
+  3  BEGIN
+  4      WHILE v_counter <= 5 LOOP
+  5          DBMS_OUTPUT.PUT_LINE('Processing customer ' || v_counter);
+  6          v_counter := v_counter + 1;
+  7      END LOOP;
+  8  END;
+  9  /
+Processing customer 1
+Processing customer 2
+Processing customer 3
+Processing customer 4
+Processing customer 5
+
+PL/SQL procedure successfully completed.
+
+13)TO PRINT 1 TO 5 (LOOP AND EXIT WHEN)
+
+SQL> DECLARE
+  2      n NUMBER := 1;
+  3  BEGIN
+  4      LOOP
+  5          DBMS_OUTPUT.PUT_LINE('Number ' || n);
+  6          n := n + 1;
+  7          EXIT WHEN n > 5;
+  8      END LOOP;
+  9  END;
+ 10  /
+Number 1
+Number 2
+Number 3
+Number 4
+Number 5
+
+PL/SQL procedure successfully completed.
+
+
+14)Nested Block
+
+SQL> BEGIN
+  2      UPDATE vehicle SET type='Transport' WHERE vehicle_id=201;
+  3
+  4      BEGIN
+  5          INSERT INTO customer(customer_id,customer_name,customer_email)
+  6          VALUES(900,'Test Customer','test@gmail.com');
+  7
+  8          DBMS_OUTPUT.PUT_LINE('Customer inserted');
+  9      EXCEPTION
+ 10          WHEN OTHERS THEN
+ 11              DBMS_OUTPUT.PUT_LINE('Insert failed');
+ 12      END;
+ 13
+ 14      COMMIT;
+ 15  END;
+ 16  /
+Customer inserted
+
+PL/SQL procedure successfully completed.
+
+15)CURSOR WITH JOIN
+
+SQL> DECLARE
+  2  CURSOR c_supply IS SELECT s.supplier_name,p.product_id FROM supplier s JOIN supplies p ON s.supplier_id=p.supplier_id;
+  3  BEGIN
+  4  FOR r IN c_supply LOOP
+  5  DBMS_OUTPUT.PUT_LINE('Supplier:'||r.supplier_name||' supplies product '||r.product_id);
+  6  END LOOP;
+  7  END;
+  8  /
+Supplier:ABC SUPPLIERS supplies product 101
+Supplier:XYZ TRADERS supplies product 102
+Supplier:XYZ TRADERS supplies product 103
+Supplier:NOVA DISTRIBUTORS supplies product 104
+Supplier:NOVA DISTRIBUTORS supplies product 105
+Supplier:STAR SUPPLY supplies product 106
+
+16)Parameterized Cursor
+
+DECLARE
+CURSOR c_emp(p_branch NUMBER) IS SELECT employee_name FROM employee WHERE branch_id=p_branch;
+v_name employee.employee_name%TYPE;
+BEGIN
+OPEN c_emp(1);
+LOOP
+FETCH c_emp INTO v_name;
+EXIT WHEN c_emp%NOTFOUND;
+DBMS_OUTPUT.PUT_LINE('Employee:'||v_name);
+END LOOP;
+CLOSE c_emp;
+END;
+/
+
+Employee: ARUN
+Employee: ARUN
+
+PL/SQL procedure successfully completed.
+
+
+17) TO PRINT nXn PATTERN(USING FOR LOOP)
+
+SQL> DECLARE
+  2    n NUMBER;
+  3  BEGIN
+  4    n := &n;
+  5    FOR i IN 1..n LOOP
+  6      FOR j IN 1..i LOOP
+  7        DBMS_OUTPUT.PUT('* ');
+  8      END LOOP;
+  9      DBMS_OUTPUT.NEW_LINE;
+ 10    END LOOP;
+ 11  END;
+ 12  /
+Enter value for n: 3
+old   4:   n := &n;
+new   4:   n := 3;
+*
+* *
+* * *
+
+PL/SQL procedure successfully completed.
+
+18) NO DATA FOUND EXCEPTION
+
+
+SQL> DECLARE
+  2      v_name customer.customer_name%TYPE;
+  3      n NUMBER;
+  4  BEGIN
+  5      n := &n;
+  6      SELECT customer_name INTO v_name
+  7      FROM customer
+  8      WHERE customer_id = n;
+  9
+ 10      DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+ 11  EXCEPTION
+ 12      WHEN NO_DATA_FOUND THEN
+ 13          DBMS_OUTPUT.PUT_LINE('Error: No data found');
+ 14  END;
+ 15  /
+Enter value for n: 3
+old   5:     n := &n;
+new   5:     n := 3;
+Name: SURESH
+
+Enter value for n: 333
+old   5:     n := &n;
+new   5:     n := 333;
+Error: No data found
+
+19) TOO MANY ROWS
+
+PL/SQL procedure successfully completed.
+
+SDECLARE
+v_name VARCHAR2(50);
+BEGIN
+SELECT customer_name INTO v_name FROM customer;
+DBMS_OUTPUT.PUT_LINE('Name:'||v_name);
+EXCEPTION
+WHEN TOO_MANY_ROWS THEN
+DBMS_OUTPUT.PUT_LINE('Error:Too many rows');
+END;
+/
+Error: Too many rows
+
+PL/SQL procedure successfully completed.
+
+20)ZERO DIVIDE 
+
+SQL> DECLARE
+  2    n NUMBER := 0;
+  3  BEGIN
+  4    n := n / n;
+  5    DBMS_OUTPUT.PUT_LINE(n);
+  6  EXCEPTION
+  7    WHEN ZERO_DIVIDE THEN
+  8      DBMS_OUTPUT.PUT_LINE('Error: cant divide with 0');
+  9  END;
+ 10  /
+Error: cant divide with 0
+
+PL/SQL procedure successfully completed.
+
+21)VALUE ERROR
+
+DECLARE
+v_salary NUMBER;
+BEGIN
+SELECT employee_name INTO v_salary FROM employee WHERE employee_id=18;
+DBMS_OUTPUT.PUT_LINE(v_salary);
+EXCEPTION
+WHEN VALUE_ERROR THEN
+DBMS_OUTPUT.PUT_LINE('Error:value error');
+END;
+/
+Error: value error
+
+PL/SQL procedure successfully completed.
+
+22)OTHER EXCEPTION
+
+DECLARE
+v_salary NUMBER;
+v_name VARCHAR2(50);
+BEGIN
+SELECT salary INTO v_salary FROM employee WHERE employee_id=18;
+DBMS_OUTPUT.PUT_LINE(v_salary);
+SELECT employee_name INTO v_name FROM employee;
+DBMS_OUTPUT.PUT_LINE(v_name);
+EXCEPTION
+WHEN VALUE_ERROR THEN
+DBMS_OUTPUT.PUT_LINE('error:value error');
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('error:unexpected error');
+END;
+/35000
+error:unexpected error
+
+PL/SQL procedure successfully completed.
+
+23) USER DEFINED EXCEPTION
+
+SQL> DECLARE
+  2    v_exp employee.experience%TYPE;
+  3    negative_error EXCEPTION;
+  4  BEGIN
+  5    SELECT experience INTO v_exp
+  6    FROM employee
+  7    WHERE employee_id = &id;
+  8
+  9    IF v_exp < 0 THEN
+ 10       RAISE negative_error;
+ 11    ELSE
+ 12       DBMS_OUTPUT.PUT_LINE('Employee experience is valid: ' || v_exp);
+ 13    END IF;
+ 14
+ 15  EXCEPTION
+ 16    WHEN negative_error THEN
+ 17       DBMS_OUTPUT.PUT_LINE('Error: Employee experience cannot be negative');
+ 18    WHEN NO_DATA_FOUND THEN
+ 19       DBMS_OUTPUT.PUT_LINE('Employee not found');
+ 20  END;
+ 21  /
+
+Enter value for id: 2
+old   7:   WHERE employee_id = &id;
+new   7:   WHERE employee_id = 2;
+Employee experience is valid: 3
+
+Enter value for id: -3
+old   5: SELECT experience INTO v_exp FROM employee WHERE employee_id=&id;
+new   5: SELECT experience INTO v_exp FROM employee WHERE employee_id=-3;
+Employee not found
+
+Enter value for id: 100
+old  5: WHERE employee_id = &id
+new  5: WHERE employee_id = 1
+Error:Employee experience cannot be negative
+
+
+PL/SQL procedure successfully completed.
+
+24)//SUM OF ADD NUMBERS  1 TO 10
+
+SQL> DECLARE
+  2  i NUMBER:=1;
+  3  v_sum NUMBER:=0;
+  4  BEGIN
+  5  WHILE i<=10 LOOP
+  6  DBMS_OUTPUT.PUT_LINE(i);
+  7  v_sum:=v_sum+i;
+  8  i:=i+2;
+  9  END LOOP;
+ 10  DBMS_OUTPUT.PUT_LINE('Sum:'||v_sum);
+ 11  END;
+ 12  /
+1
+3
+5
+7
+9
+Sum:25
+
+25)LEAP YEAR OR NOT
+
+SQL> DECLARE
+  2  y NUMBER:=&year;
+  3  BEGIN
+  4  IF MOD(y,400)=0 OR (MOD(y,4)=0 AND MOD(y,100)<>0) THEN
+  5  DBMS_OUTPUT.PUT_LINE('Leap Year');
+  6  ELSE
+  7  DBMS_OUTPUT.PUT_LINE('Not a Leap Year');
+  8  END IF;
+  9  END;
+ 10  /
+
+Enter value for year: 1800
+old   2: y NUMBER:=&year;
+new   2: y NUMBER:=1800;
+Not a Leap Year
+
+Enter value for year: 2024
+old   2: y NUMBER:=&year;
+new   2: y NUMBER:=2024;
+Leap Year
+
+//HACKER RANK
+
+1)1.)A)TO FIND WHETHER A NUMBER IS EVEN OR ODD,POSITIVE NEGATIVE OR ZERO AND ARMSTRONG OR NOT 
+
+SQL> BEGIN
+  2  V_NUM:=&V_NUM;
+  3  IF V_NUM=0 THEN
+  4  DBMS_OUTPUT.PUT_LINE('NUMBER IS ZERO');
+  5  ELSIF V_NUM>0 THEN
+  6  DBMS_OUTPUT.PUT_LINE('NUMBER IS POSITIVE');
+  7  IF MOD(V_NUM,2)=0 THEN
+  8  DBMS_OUTPUT.PUT_LINE('EVEN');
+  9  ELSE
+ 10  DBMS_OUTPUT.PUT_LINE('ODD');
+ 11  END IF;
+ 12  L_LEN:=LENGTH(TO_CHAR(V_NUM));
+ 13  N:=V_NUM;
+ 14  WHILE N!=0 LOOP
+ 15  REM:=MOD(N,10);
+ 16  ANS:=ANS+POWER(REM,L_LEN);
+ 17  N:=TRUNC(N/10);
+ 18  END LOOP;
+ 19  IF ANS=V_NUM THEN
+ 20  DBMS_OUTPUT.PUT_LINE('NUMBER IS ARMSTRONG');
+ 21  ELSE
+ 22  DBMS_OUTPUT.PUT_LINE('NUMBER IS NOT ARMSTRONG');
+ 23  END IF;
+ 24  ELSE
+ 25  DBMS_OUTPUT.PUT_LINE('NUMBER IS NEGATIVE');
+ 26  END IF;
+ 27  END;
+ 28  /
+
+Enter value for v_num: 153
+old   8:     V_NUM := &V_NUM;
+new   8:     V_NUM := 153;
+NUMBER IS POSITIVE
+ODD
+NUMBER IS ARMSTRONG
+
+Enter value for v_num: -25
+old   8:     V_NUM := &V_NUM;
+new   8:     V_NUM := -25;
+NUMBER IS NEGATIVE
+
+Enter value for v_num: 0
+old   8:     V_NUM := &V_NUM;
+new   8:     V_NUM := 0;
+NUMBER IS ZERO
+
+1.)B)TO FIND THE FIFONACCI OF A NUMBER
+SQL> DECLARE
+  2  s NUMBER:=-1;
+  3  k NUMBER:=1;
+  4  j NUMBER:=0;
+  5  v NUMBER;
+  6  BEGIN
+  7  v:=&v;
+  8  FOR i IN 1..v LOOP
+  9  j:=s+k;
+ 10  DBMS_OUTPUT.PUT_LINE(j||' ');
+ 11  s:=k;
+ 12  k:=j;
+ 13  END LOOP;
+ 14  END;
+ 15  /
+Enter value for v: 10
+old   7: v:=&v;
+new   7: v:=10;
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+
+
+2)Declare cursor to retrieve employee whose name starts with ‘a’ and display the values of  cursor attributes 
+
+SQL> DECLARE
+  2  v_name VARCHAR2(50);
+  3  v_salary NUMBER;
+  4  CURSOR c_cursor IS
+  5  SELECT employee_name,salary
+  6  FROM employee
+  7  WHERE employee_name LIKE 'A%';
+  8  BEGIN
+  9  OPEN c_cursor;
+ 10  FETCH c_cursor INTO v_name,v_salary;
+ 11  IF c_cursor%FOUND THEN
+ 12  DBMS_OUTPUT.PUT_LINE('first row fetched '||v_name);
+ 13  ELSE
+ 14  DBMS_OUTPUT.PUT_LINE('no row fetched');
+ 15  END IF;
+ 16  FETCH c_cursor INTO v_name,v_salary;
+ 17  IF c_cursor%FOUND THEN
+ 18  DBMS_OUTPUT.PUT_LINE('second row fetched '||v_name);
+ 19  ELSE
+ 20  DBMS_OUTPUT.PUT_LINE('no row fetched');
+ 21  END IF;
+ 22  IF c_cursor%ISOPEN THEN
+ 23  DBMS_OUTPUT.PUT_LINE('cursor open');
+ 24  ELSE
+ 25  DBMS_OUTPUT.PUT_LINE('cursor not open');
+ 26  END IF;
+ 27  DBMS_OUTPUT.PUT_LINE('the no of rows fetched: '||c_cursor%ROWCOUNT);
+ 28  CLOSE c_cursor;
+ 29  IF c_cursor%ISOPEN THEN
+ 30  DBMS_OUTPUT.PUT_LINE('cursor open');
+ 31  ELSE
+ 32  DBMS_OUTPUT.PUT_LINE('cursor not open');
+ 33  END IF;
+ 34  END;
+ 35  /
+
+first row fetched ARUN
+second row fetched ARUN
+cursor open
+the no of rows fetched: 2
+cursor not open
+
+PL/SQL procedure successfully completed.
+
+3) Declare cursor to count number of employees residing in ‘sivakasi’ and earning salary higher than average salary of their departments wit necessary exception handling.
+
+SQL> DECLARE
+  2  c_count NUMBER;
+  3  cursor_open EXCEPTION;
+  4  CURSOR c_cursor IS
+  5  SELECT COUNT(*)
+  6  FROM EMPLOYEE
+  7  WHERE SALARY>
+  8  (SELECT AVG(SALARY) FROM EMPLOYEE WHERE EMPLOYEE_CITY='SIVAKASI')
+  9  AND EMPLOYEE_CITY='SIVAKASI';
+ 10  BEGIN
+ 11  OPEN c_cursor;
+ 12  FETCH c_cursor INTO c_count;
+ 13  IF c_cursor%ISOPEN THEN
+ 14  DBMS_OUTPUT.PUT_LINE('No of employees in Sivakasi with salary greatMicrosoft.QuickAction.Bluetooth*er than average salary: '||c_count);
+ 15  ELSE
+ 16  RAISE cursor_open;
+ 17  END IF;
+ 18  CLOSE c_cursor;
+ 19  IF c_cursor%ISOPEN THEN
+ 20  DBMS_OUTPUT.PUT_LINE('Cursor still open');
+ 21  ELSE
+ 22  RAISE cursor_open;
+ 23  END IF;
+ 24  EXCEPTION
+ 25  WHEN cursor_open THEN
+ 26  DBMS_OUTPUT.PUT_LINE('Error: Cursor closed');
+ 27  END;
+ 28  /
+
+No of employees in Sivakasi with salary greater than average salary: 2
+Error: Cursor closed
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+

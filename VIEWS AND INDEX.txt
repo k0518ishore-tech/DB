@@ -1,0 +1,675 @@
+//Simple View
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+
+6 rows selected.
+
+SQL> CREATE VIEW category_view AS
+  2  SELECT category_id, category_name
+  3  FROM product_category;
+
+View created.
+
+SQL> SELECT * FROM category_view;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+
+6 rows selected.
+
+
+//WHERE CLAUSE
+
+SQL> select employee_id,employee_name ,salary from employee where salary > 30000;
+
+EMPLOYEE_ID EMPLOYEE_NAME                                          SALARY
+----------- -------------------------------------------------- ----------
+          6 ARUN                                                    46000
+          7 KUMAR                                                   35000
+          9 ARUN                                                    45000
+          1 ARUN                                                    45000
+          2 KUMAR                                                   35000
+         12 VIJAY                                                   35000
+         13 AJAY                                                    60000
+         14 KARTHIK                                                 48000
+         15 SURESH                                                  35000
+         16 MAHESH                                                  46000
+         17 DINESH                                                  45000
+
+EMPLOYEE_ID EMPLOYEE_NAME                                          SALARY
+----------- -------------------------------------------------- ----------
+         18 RAHUL                                                   35000
+         19 PRAVEEN                                                 35000
+         20 VIGNESH                                                 35000
+
+14 rows selected.
+
+SQL>
+SQL> CREATE VIEW high_salary_employee AS
+  2  SELECT employee_id, employee_name, salary
+  3  FROM employee
+  4  WHERE salary > 30000;
+
+View created.
+
+SQL> SELECT * FROM high_salary_employee;
+
+EMPLOYEE_ID EMPLOYEE_NAME                                          SALARY
+----------- -------------------------------------------------- ----------
+          6 ARUN                                                    46000
+          7 KUMAR                                                   35000
+          9 ARUN                                                    45000
+          1 ARUN                                                    45000
+          2 KUMAR                                                   35000
+         12 VIJAY                                                   35000
+         13 AJAY                                                    60000
+         14 KARTHIK                                                 48000
+         15 SURESH                                                  35000
+         16 MAHESH                                                  46000
+         17 DINESH                                                  45000
+
+EMPLOYEE_ID EMPLOYEE_NAME                                          SALARY
+----------- -------------------------------------------------- ----------
+         18 RAHUL                                                   35000
+         19 PRAVEEN                                                 35000
+         20 VIGNESH                                                 35000
+
+14 rows selected.
+
+
+//JOIN
+
+SQL> select employee_name,role,salary,branch_id from employee;
+
+EMPLOYEE_NAME                                      ROLE
+-------------------------------------------------- --------------------
+    SALARY  BRANCH_ID
+---------- ----------
+ARUN                                               MANAGER
+     46000          1
+
+KUMAR                                              SUPERVISOR
+     35000          2
+
+RAVI                                               CLERK
+     26000          3
+
+
+
+SQL> CREATE VIEW employee_branch_info AS
+  2  SELECT e.employee_name,
+  3         e.role,
+  4         e.salary,
+  5         w.branch_id
+  6  FROM employee e
+  7  JOIN warehouse_branch w
+  8  ON e.branch_id = w.branch_id;
+
+View created.
+
+SQL> SELECT * FROM employee_branch_info;
+
+EMPLOYEE_NAME                                      ROLE
+-------------------------------------------------- --------------------
+    SALARY  BRANCH_ID
+---------- ----------
+ARUN                                               MANAGER
+     46000          1
+
+KUMAR                                              SUPERVISOR
+     35000          2
+
+RAVI                                               CLERK
+     26000          3
+
+
+
+//AGGREGATE VIEW
+
+SQL> select branch_id,count(employee_id) from employee group by branch_id;
+
+ BRANCH_ID COUNT(EMPLOYEE_ID)
+---------- ------------------
+         1                  2
+         2                  7
+         3                  4
+         7                  1
+         8                  1
+         9                  1
+         4                  2
+         5                  2
+
+8 rows selected.
+
+SQL> CREATE VIEW employee_count_per_branch AS
+  2  SELECT branch_id,
+  3         COUNT(employee_id) AS total_employees
+  4  FROM employee
+  5  GROUP BY branch_id;
+
+View created.
+
+SQL> SELECT * FROM employee_count_per_branch;
+
+ BRANCH_ID TOTAL_EMPLOYEES
+---------- ---------------
+         1               2
+         2               7
+         3               4
+         7               1
+         8               1
+         9               1
+         4               2
+         5               2
+
+8 rows selected.
+
+//NESSTED VIEW
+
+ SELECT * FROM employee_count_per_branch;
+
+ BRANCH_ID TOTAL_EMPLOYEES
+---------- ---------------
+         1               2
+         2               7
+         3               4
+         7               1
+         8               1
+         9               1
+         4               2
+         5               2
+
+SQL> CREATE VIEW busy_branches AS
+  2  SELECT branch_id, total_employees
+  3  FROM employee_count_per_branch
+  4  WHERE total_employees > 2;
+
+View created.
+
+SQL> SELECT * FROM busy_branches;
+
+ BRANCH_ID TOTAL_EMPLOYEES
+---------- ---------------
+         2               7
+         3               4
+
+//INSERT IN VIEW
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+
+6 rows selected.
+
+SQL> INSERT INTO category_view VALUES (201, 'Furniture');
+
+1 row created.
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+        201 Furniture
+
+7 rows selected.
+
+SQL> INSERT INTO category_view VALUES (8, 'Groceries');
+
+1 row created.
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+        201 Furniture
+          8 Groceries
+
+8 rows selected.
+
+//UPDATE IN VIEW
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+        201 Furniture
+          8 Groceries
+
+8 rows selected.
+
+SQL> update category_view set category_id = 7 where category_id = 201
+  2  ;
+
+1 row updated.
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+          7 Furniture
+          8 Groceries
+
+8 rows selected.
+
+
+// DELETE IN VIEW
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+          7 Furniture
+          8 Groceries
+
+8 rows selected.
+
+SQL> delete from category_view where category_id = 8;
+
+1 row deleted.
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+          4 FURNITURE
+          5 ACCESSORIES
+          6 STORAGE
+          7 Furniture
+
+7 rows selected.
+
+//INDEX
+
+//UNIQUE INDEX
+
+SQL> CREATE UNIQUE INDEX idx_supplier_email
+  2  ON supplier(supplier_email);
+
+Index created.
+
+//COMPOSITE INDEX
+
+SQL> CREATE INDEX idx_stock_product_branch
+  2  ON stock_movement(product_id, branch_id);
+
+Index created.
+
+
+//BITMAP INDEX
+
+SQL> CREATE BITMAP INDEX idx_employee_role
+  2  ON employee(role);
+
+Index created.
+
+//FUNCTION BASED INDEX
+
+SQL> CREATE INDEX idx_lower_supplier_email
+  2  ON supplier(LOWER(supplier_email));
+
+Index created.
+
+//SECONDARY INDEX
+
+SQL> CREATE INDEX INDEX_EMPLOYEE_SALARY ON EMPLOYEE(SALARY);
+
+Index created.
+
+
+
+//TIME
+
+SQL> select salary,employee_name from employee order by salary DESC;
+
+    SALARY EMPLOYEE_NAME
+---------- --------------------------------------------------
+     60000 AJAY
+     48000 KARTHIK
+     46000 ARUN
+     46000 MAHESH
+     45000 DINESH
+     45000 ARUN
+     45000 ARUN
+     35000 KUMAR
+     35000 VIGNESH
+     35000 KUMAR
+     35000 PRAVEEN
+
+    SALARY EMPLOYEE_NAME
+---------- --------------------------------------------------
+     35000 RAHUL
+     35000 SURESH
+     35000 VIJAY
+     28000 MANI
+     28000 MANI
+     26000 RAVI
+     25000 RAVI
+     22000 SATHISH
+     22000 SATHISH
+
+20 rows selected.
+
+Elapsed: 00:00:00.02
+
+QL>  CREATE INDEX INDEX_EMPLOYEE_SALARY ON EMPLOYEE(SALARY);
+
+Index created.
+
+Elapsed: 00:00:00.01
+SQL> select salary,employee_name from employee order by salary DESC;
+
+    SALARY EMPLOYEE_NAME
+---------- --------------------------------------------------
+     60000 AJAY
+     48000 KARTHIK
+     46000 ARUN
+     46000 MAHESH
+     45000 DINESH
+     45000 ARUN
+     45000 ARUN
+     35000 KUMAR
+     35000 VIGNESH
+     35000 KUMAR
+     35000 PRAVEEN
+
+    SALARY EMPLOYEE_NAME
+---------- --------------------------------------------------
+     35000 RAHUL
+     35000 SURESH
+     35000 VIJAY
+     28000 MANI
+     28000 MANI
+     26000 RAVI
+     25000 RAVI
+     22000 SATHISH
+     22000 SATHISH
+
+20 rows selected.
+
+Elapsed: 00:00:00.01
+
+//SURPRISE QUESTIONS 
+
+//CASE WHEN in SELECT
+
+EMPLOYEE_ID EMPLOYEE_NAME                                      EXPERIENCE
+----------- -------------------------------------------------- ----------
+EXP_LEVEL
+------------
+          9 ARUN                                                        5
+INTERMEDIATE
+
+         10 MANI                                                        3
+JUNIOR
+
+         11 SATHISH                                                     1
+JUNIOR
+
+
+EMPLOYEE_ID EMPLOYEE_NAME                                      EXPERIENCE
+----------- -------------------------------------------------- ----------
+EXP_LEVEL
+------------
+          1 ARUN                                                        5
+INTERMEDIATE
+
+          2 KUMAR                                                       3
+JUNIOR
+
+          3 RAVI                                                        2
+JUNIOR
+
+
+EMPLOYEE_ID EMPLOYEE_NAME                                      EXPERIENCE
+----------- -------------------------------------------------- ----------
+EXP_LEVEL
+------------
+          4 SATHISH                                                     2
+JUNIOR
+
+          5 MANI                                                        3
+JUNIOR
+
+         12 VIJAY                                                       6
+INTERMEDIATE
+
+
+//CASE WHEN IN UPDATE 
+
+EMPLOYEE_ID EMPLOYEE_NAME        ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE        BRANCH_ID
+----------- -------------------- -------------------- ---------- --------- ---------- -------------------- ----------
+EMPLOYEE_EXP
+-------------------------
+         16 MAHESH               SUPERVISOR                46000 12-MAY-24          6 9000016161                    3
+
+
+         17 DINESH               MANAGER                   45000 15-JUN-23          8 9000017171                    5
+
+
+         18 RAHUL                SUPERVISOR                35000 01-JAN-24          3 9000018181                    2
+
+
+         19 PRAVEEN              SUPERVISOR                35000 05-FEB-24          2 9000019191                    2
+
+
+         20 VIGNESH              SUPERVISOR                35000 10-MAR-24          4 9000020202                    2
+
+
+
+
+UPDATE employee
+SET employee_exp =
+CASE
+WHEN experience >= 7 THEN 'EXPERT'
+WHEN experience >= 5 THEN 'SENIOR'
+ELSE 'JUNIOR'
+END;
+
+
+EMPLOYEE_ID EMPLOYEE_NAME        ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE        BRANCH_ID
+----------- -------------------- -------------------- ---------- --------- ---------- -------------------- ----------
+EMPLOYEE_EXP
+-------------------------
+         16 MAHESH               SUPERVISOR                46000 12-MAY-24          6 9000016161                    3
+SENIOR
+
+         17 DINESH               MANAGER                   45000 15-JUN-23          8 9000017171                    5
+EXPERT
+
+         18 RAHUL                SUPERVISOR                35000 01-JAN-24          3 9000018181                    2
+JUNIOR
+
+         19 PRAVEEN              SUPERVISOR                35000 05-FEB-24          2 9000019191                    2
+JUNIOR
+
+         20 VIGNESH              SUPERVISOR                35000 10-MAR-24          4 9000020202                    2
+JUNIOR
+
+
+//ROW NUMBER
+
+
+
+SQL> select * from vehicle;
+
+VEHICLE_ID VEHICLE_NUMBER                                     TYPE                  BRANCH_ID
+---------- -------------------------------------------------- -------------------- ----------
+         1 TN01AB1234                                         Truck                         2
+         2 TN02CD5678                                         VAN                           2
+         3 TN03EF9012                                         TRUCK                         3
+         4 TN04GH3456                                         VAN                           4
+         5 TN05IJ7890                                         TRUCK                         5
+         6 TN06KL1122                                         VAN                           6
+         7 TN07AA7777                                         Van                           3
+         9 TN01AB2547                                         TRUCK                         1
+        10 TN02CD1816                                         VAN                           2
+        19 TN04GH3458                                         VAN                           4
+
+10 rows selected.
+
+SQL> SELECT
+  2  ROW_NUMBER() OVER (ORDER BY vehicle_id DESC) AS vehicle_serial_no,
+  3  vehicle_id,
+  4  vehicle_number,
+  5  type,
+  6  branch_id
+  7  FROM vehicle;
+
+VEHICLE_SERIAL_NO VEHICLE_ID VEHICLE_NUMBER                                     TYPE                  BRANCH_ID
+----------------- ---------- -------------------------------------------------- -------------------- ----------
+                1         19 TN04GH3458                                         VAN                           4
+                2         10 TN02CD1816                                         VAN                           2
+                3          9 TN01AB2547                                         TRUCK                         1
+                4          7 TN07AA7777                                         Van                           3
+                5          6 TN06KL1122                                         VAN                           6
+                6          5 TN05IJ7890                                         TRUCK                         5
+                7          4 TN04GH3456                                         VAN                           4
+                8          3 TN03EF9012                                         TRUCK                         3
+                9          2 TN02CD5678                                         VAN                           2
+               10          1 TN01AB1234                                         Truck                         2
+
+10 rows selected.
+
+//FETCH FIRST
+
+SQL> SELECT employee_name, salary,  branch_id FROM employee ORDER BY salary DESC   FETCH FIRST 5 ROWS ONLY;
+
+EMPLOYEE_NAME            SALARY  BRANCH_ID
+-------------------- ---------- ----------
+AJAY                      60000          3
+KARTHIK                   48000          4
+ARUN                      46000          1
+MAHESH                    46000          3
+ARUN                      45000          7
+
+//DELETE
+SQL> DELETE FROM employee_copy
+  2  WHERE
+  3  CASE
+  4  WHEN experience >= 5 THEN 'SENIOR'
+  5  ELSE 'JUNIOR'
+  6  END = 'JUNIOR';
+
+EMPLOYEE_ID EMPLOYEE_NAME        ROLE                 EXP_LEVEL
+----------- -------------------- -------------------- --------------------
+          6 ARUN                 MANAGER              INTERMEDIATE
+          9 ARUN                 MANAGER              INTERMEDIATE
+          1 ARUN                 MANAGER              INTERMEDIATE
+         12 VIJAY                MANAGER              INTERMEDIATE
+         13 AJAY                 SUPERVISOR           INTERMEDIATE
+         14 KARTHIK              MANAGER              INTERMEDIATE
+         16 MAHESH               SUPERVISOR           INTERMEDIATE
+         17 DINESH               MANAGER              INTERMEDIATE
+
+8 rows selected.
+
+12 rows deleted.
+
+
+SQL> INSERT INTO employee_copy (employee_id, employee_name, experience, exp_level)
+  2  SELECT employee_id,
+  3         employee_name,
+  4         experience,
+  5         CASE
+  6         WHEN experience >= 10 THEN 'EXPERT'
+  7         WHEN experience >= 5 THEN 'INTERMEDIATE'
+  8         ELSE 'JUNIOR'
+  9         END
+ 10  FROM employee;
+
+20 rows created.
+
+SQL> SELECT employee_id, employee_name, experience, exp_level
+  2  FROM employee_copy;
+
+EMPLOYEE_ID EMPLOYEE_NAME        EXPERIENCE EXP_LEVEL
+----------- -------------------- ---------- --------------------
+          6 ARUN                          6 INTERMEDIATE
+          9 ARUN                          5 INTERMEDIATE
+          1 ARUN                          5 INTERMEDIATE
+         12 VIJAY                         6 INTERMEDIATE
+         13 AJAY                          7 INTERMEDIATE
+         14 KARTHIK                       5 INTERMEDIATE
+         16 MAHESH                        6 INTERMEDIATE
+         17 DINESH                        8 INTERMEDIATE
+          6 ARUN                          6 INTERMEDIATE
+          7 KUMAR                         4 JUNIOR
+          8 RAVI                          2 JUNIOR
+          9 ARUN                          5 INTERMEDIATE
+         10 MANI                          3 JUNIOR
+         11 SATHISH                       1 JUNIOR
+          1 ARUN                          5 INTERMEDIATE
+          2 KUMAR                         3 JUNIOR
+          3 RAVI                          2 JUNIOR
+          4 SATHISH                       2 JUNIOR
+          5 MANI                          3 JUNIOR
+         12 VIJAY                         6 INTERMEDIATE
+         13 AJAY                          7 INTERMEDIATE
+         14 KARTHIK                       5 INTERMEDIATE
+         15 SURESH                        4 JUNIOR
+         16 MAHESH                        6 INTERMEDIATE
+         17 DINESH                        8 INTERMEDIATE
+         18 RAHUL                         3 JUNIOR
+         19 PRAVEEN                       2 JUNIOR
+         20 VIGNESH                       4 JUNIOR
+
+28 rows selected.
+--
+
+
+

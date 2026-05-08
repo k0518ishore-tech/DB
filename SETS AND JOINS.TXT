@@ -1,0 +1,312 @@
+//UNION
+SQL> SELECT supplier_name FROM supplier  UNION  SELECT customer_name FROM customer;
+
+SUPPLIER_NAME
+--------------------------------------------------
+ABC SUPPLIERS
+XYZ TRADERS
+NOVA DISTRIBUTORS
+STAR SUPPLY
+OMEGA CORP
+DELTA ENTERPRISES
+RAJESH
+ANITA
+SURESH
+MEENA
+KARTHIK
+
+SUPPLIER_NAME
+--------------------------------------------------
+PRIYA
+
+12 rows selected.
+
+//UNION ALL
+
+
+SQL> SELECT supplier_name FROM supplier UNION ALL  SELECT customer_name FROM customer;
+
+SUPPLIER_NAME
+--------------------------------------------------
+ABC SUPPLIERS
+XYZ TRADERS
+NOVA DISTRIBUTORS
+STAR SUPPLY
+OMEGA CORP
+DELTA ENTERPRISES
+SUNRISE SUPPLIES
+PRIME INDUSTRIES
+GLOBAL MART
+EVEREST TRADERS
+ABC SUPPLIERS
+
+SUPPLIER_NAME
+--------------------------------------------------
+XYZ TRADERS
+OMEGA CORP
+DELTA ENTERPRISES
+RAJESH
+ANITA
+SURESH
+MEENA
+KARTHIK
+PRIYA
+
+20 rows selected.
+
+//INTERSECT
+
+SQL> SELECT branch_id FROM employee INTERSECT SELECT branch_id FROM vehicle;
+
+ BRANCH_ID
+----------
+         1
+         2
+         3
+         4
+         5
+
+//INTERECT ALL
+SQL> SELECT branch_id FROM employee INTERSECT ALL SELECT branch_id  FROM vehicle;
+
+ BRANCH_ID
+----------
+         1
+         2
+         2
+         3
+         3
+         4
+         5
+
+7 rows selected.
+//MINUS
+
+SQL> SELECT branch_id FROM vehicle MINUS SELECT branch_id FROM employee; (A-B)
+
+ BRANCH_ID
+----------
+         6
+
+SQL> SELECT branch_id FROM employee  MINUS SELECT branch_id FROM vehicle; (B-A)
+
+ BRANCH_ID
+----------
+         7
+         8
+         9
+//EXCEPT
+
+SQL> SELECT branch_id FROM employee EXCEPT  SELECT branch_id FROM vehicle;
+
+ BRANCH_ID
+----------
+         7
+         8
+         9
+
+
+//JOINS
+
+
+SQL> SELECT e.employee_name, w.branch_name FROM employee e JOIN warehouse_branch w  ON e.branch_id = w.branch_id;
+
+EMPLOYEE_NAME
+--------------------------------------------------
+BRANCH_NAME
+--------------------------------------------------
+ARUN
+SALEM SOUTH
+
+MANI
+TIRUNELVELI UNIT
+
+SATHISH
+ERODE CENTER
+
+//SELF JOIN
+//employees working in the same branch
+
+SQL> SELECT e1.employee_name AS employee1,
+  2         e2.employee_name AS employee2,
+  3         e1.branch_id
+  4  FROM employee e1
+  5  JOIN employee e2
+  6  ON e1.branch_id = e2.branch_id
+  7  AND e1.employee_id <> e2.employee_id;
+
+EMPLOYEE1
+--------------------------------------------------
+EMPLOYEE2                                           BRANCH_ID
+-------------------------------------------------- ----------
+ARUN
+ARROW                                                      1
+
+KUMAR
+KARTHI                                                     2
+
+RAVI
+RAMESH                                                     3
+
+//LEFT JOIN
+
+SQL> SELECT s.supplier_name, sp.product_id
+  2  FROM supplier s
+  3  LEFT JOIN supplies sp
+  4  ON s.supplier_id = sp.supplier_id;
+
+SUPPLIER_NAME                                      PRODUCT_ID
+-------------------------------------------------- ----------
+ABC SUPPLIERS                                             101
+XYZ TRADERS                                               102
+XYZ TRADERS                                               103
+NOVA DISTRIBUTORS                                         104
+NOVA DISTRIBUTORS                                         105
+STAR SUPPLY                                               106
+DELTA ENTERPRISES                                         106
+DELTA ENTERPRISES
+SUNRISE SUPPLIES
+ABC SUPPLIERS
+PRIME INDUSTRIES
+
+
+//RIGHT JOIN
+
+SQL> SELECT s.supplier_name, sp.product_id FROM supplier s RIGHT JOIN supplies sp ON s.supplier_id = sp.supplier_id;
+
+SUPPLIER_NAME                                      PRODUCT_ID
+-------------------------------------------------- ----------
+ABC SUPPLIERS                                             101
+XYZ TRADERS                                               102
+XYZ TRADERS                                               103
+NOVA DISTRIBUTORS                                         104
+NOVA DISTRIBUTORS                                         105
+STAR SUPPLY                                               106
+                                                          106
+                                                          103
+                         
+
+//FULL OUTER JOIN
+
+
+SQL> SELECT s.supplier_name, sp.product_id FROM supplier s FULL OUTER JOIN supplies sp  ON s.supplier_id = sp.supplier_id;
+
+SUPPLIER_NAME                                      PRODUCT_ID
+-------------------------------------------------- ----------
+ABC SUPPLIERS                                             101
+XYZ TRADERS                                               102
+XYZ TRADERS                                               103
+NOVA DISTRIBUTORS                                         104
+NOVA DISTRIBUTORS                                         105
+STAR SUPPLY                                               106
+DELTA ENTERPRISES                                         
+DELTA ENTERPRISES
+SUNRISE SUPPLIES
+                                                          106
+                                                          103
+
+SUPPLIER_NAME                                      PRODUCT_ID
+-------------------------------------------------- ----------
+XYZ TRADERS
+OMEGA CORP
+EVEREST TRADERS
+GLOBAL MART
+OMEGA CORP
+
+16 rows selected.
+
+//CROSS JOIN
+
+SQL> SELECT *
+  2  FROM supplier
+  3  CROSS JOIN product_category;
+
+SUPPLIER_ID SUPPLIER_NAME
+----------- --------------------------------------------------
+SUPPLIER_PHONE_NUMBE SUPPLIER_EMAIL
+-------------------- --------------------------------------------------
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ABC SUPPLIERS
+9876543210           abc@gmail.com
+          1 ELECTRONICS
+
+          1 ABC SUPPLIERS
+9876543210           abc@gmail.com
+          2 OFFICE EQUIPMENT
+
+SUPPLIER_ID SUPPLIER_NAME
+----------- --------------------------------------------------
+SUPPLIER_PHONE_NUMBE SUPPLIER_EMAIL
+-------------------- --------------------------------------------------
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+
+          1 ABC SUPPLIERS
+9876543210           abc@gmail.com
+          3 NETWORKING
+
+          1 ABC SUPPLIERS
+9876543210           abc@gmail.com
+
+
+84 rows selected.
+
+//NATURAL JOIN
+
+
+SQL> SELECT *
+  2  FROM vehicle
+  3  NATURAL JOIN warehouse_branch;
+
+ BRANCH_ID VEHICLE_ID VEHICLE_NUMBER
+---------- ---------- --------------------------------------------------
+TYPE                 BRANCH_NAME
+-------------------- --------------------------------------------------
+CITY                                                 CAPACITY
+-------------------------------------------------- ----------
+STATUS
+--------------------
+         2          1 TN01AB1234
+Truck                MADURAI CENTRAL
+MADURAI                                                  6000
+ACTIVE
+
+
+ BRANCH_ID VEHICLE_ID VEHICLE_NUMBER
+---------- ---------- --------------------------------------------------
+TYPE                 BRANCH_NAME
+-------------------- --------------------------------------------------
+CITY                                                 CAPACITY
+-------------------------------------------------- ----------
+STATUS
+--------------------
+         2          2 TN02CD5678
+VAN                  MADURAI CENTRAL
+MADURAI                                                  6000
+ACTIVE
+
+10 rows selected.
+
+
+//USING
+
+SQL> SELECT employee_name, branch_name
+  2  FROM employee
+  3  JOIN warehouse_branch
+  4  USING (branch_id);
+
+EMPLOYEE_NAME
+--------------------------------------------------
+BRANCH_NAME
+--------------------------------------------------
+ARUN
+SIVAKASI MAIN
+
+KUMAR
+MADURAI CENTRAL
+
+RAVI
+VIRUDUNAGAR EAST
+
+

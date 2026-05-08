@@ -1,0 +1,1974 @@
+SQL> INSERT INTO supplier VALUES (1, 'ABC SUPPLIERS', '9876543210', 'abc@gmail.com');
+
+1 row created.
+
+SQL> INSERT INTO supplier VALUES (2, 'XYZ TRADERS', '9123456780', 'xyz@gmail.com');
+
+1 row created.
+
+SQL> INSERT INTO supplier VALUES (3, 'NOVA DISTRIBUTORS', '9001112233', 'nova@gmail.com');
+
+
+
+SQL> select * from supplier;
+
+SUPPLIER_ID SUPPLIER_NAME
+----------- --------------------------------------------------
+SUPPLIER_PHONE_NUMBE SUPPLIER_EMAIL
+-------------------- --------------------------------------------------
+          1 ABC SUPPLIERS
+9876543210           abc@gmail.com
+
+          2 XYZ TRADERS
+9123456780           xyz@gmail.com
+
+          3 NOVA DISTRIBUTORS
+9001112233           nova@gmail.com
+
+
+SUPPLIER_ID SUPPLIER_NAME
+
+
+6 rows selected.
+
+
+
+SQL> INSERT INTO product_category VALUES (1, 'ELECTRONICS');
+
+1 row created.
+
+SQL> INSERT INTO product_category VALUES (2, 'OFFICE EQUIPMENT');
+
+1 row created.
+
+SQL> INSERT INTO product_category VALUES (3, 'NETWORKING');
+
+1 row created.
+
+
+
+
+SQL> select * from product_category;
+
+CATEGORY_ID CATEGORY_NAME
+----------- --------------------------------------------------
+          1 ELECTRONICS
+          2 OFFICE EQUIPMENT
+          3 NETWORKING
+     
+
+6 rows selected.
+
+
+
+SQL> INSERT INTO customer VALUES (1, 'RAJESH', 'rajesh@gmail.com');
+
+1 row created.
+
+SQL> INSERT INTO customer VALUES (2, 'ANITA', 'anita@gmail.com');
+
+1 row created.
+
+SQL> INSERT INTO customer VALUES (3, 'SURESH', 'suresh@gmail.com');
+
+1 row created.
+
+
+
+SQL> select * from customer;
+
+CUSTOMER_ID CUSTOMER_NAME
+----------- --------------------------------------------------
+CUSTOMER_EMAIL
+--------------------------------------------------
+          1 RAJESH
+rajesh@gmail.com
+
+          2 ANITA
+anita@gmail.com
+
+          3 SURESH
+suresh@gmail.com
+
+
+
+
+SQL> INSERT INTO vehicle VALUES (1, 'TN01AB1234', 'TRUCK', 1);
+
+1 row created.
+
+SQL> INSERT INTO vehicle VALUES (2, 'TN02CD5678', 'VAN', 2);
+
+1 row created.
+
+SQL> INSERT INTO vehicle VALUES (3, 'TN03EF9012', 'TRUCK', 3);
+
+1 row created.
+
+
+
+SQL> select * from vehicle;
+
+VEHICLE_ID VEHICLE_NUMBER
+---------- --------------------------------------------------
+TYPE                  BRANCH_ID
+-------------------- ----------
+         1 TN01AB1234
+TRUCK                         1
+
+         2 TN02CD5678
+VAN                           2
+
+         3 TN03EF9012
+TRUCK                         3
+
+
+
+6 rows selected.
+
+
+SQL> INSERT INTO employee
+  2  (employee_id, employee_name, role, salary, join_date, employee_phone, branch_id) VALUES
+  3  (1, 'ARUN', 'MANAGER', 45000, DATE '2021-01-10', '9000011111', 1);
+
+1 row created.
+
+SQL>
+SQL> INSERT INTO employee
+  2  (employee_id, employee_name, role, salary, join_date, employee_phone, branch_id)  VALUES
+  3  (2, 'KUMAR', 'SUPERVISOR', 35000, DATE '2022-02-15', '9000022222', 2);
+
+1 row created.
+
+
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21            9000011111
+         1
+
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22            9000022222
+         2
+
+EMPLOYEE_ID EMPLOYEE_NAME
+              28000 25-MAY-22            9000055555
+         5
+
+
+
+SQL> INSERT INTO customer_contact VALUES (1, 1, 'MG ROAD', 'SIVAKASI', '626123', '9888800011');
+
+1 row created.
+
+SQL> INSERT INTO customer_contact VALUES (2, 2, 'ANNA NAGAR', 'MADURAI', '625020', '9888800022');
+
+1 row created.
+
+SQL> INSERT INTO customer_contact VALUES (3, 3, 'EAST STREET', 'VIRUDUNAGAR', '626001', '9888800033');
+
+1 row created.
+
+
+SQL> select * from customer_contact;
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SIVAKASI                                           626123
+9888800011
+
+         2           2 ANNA NAGAR
+MADURAI                                            625020
+9888800022
+
+
+
+SQL> INSERT INTO stock_movement VALUES (501, 101, 1, DATE '2025-01-08');
+
+1 row created.
+
+SQL> INSERT INTO stock_movement VALUES (502, 102, 1, DATE '2025-01-09');
+
+1 row created.
+
+SQL> INSERT INTO stock_movement VALUES (503, 103, 2, DATE '2025-01-10');
+
+1 row created.
+
+
+SQL> select * from stock_movement;
+
+MOVEMENT_ID PRODUCT_ID  BRANCH_ID MOVEMENT_
+----------- ---------- ---------- ---------
+        501        101          1 08-JAN-25
+        502        102          1 09-JAN-25
+        503        103          2 10-JAN-25
+
+SQL> INSERT INTO supplies VALUES (1, 101);
+
+1 row created.
+
+SQL> INSERT INTO supplies VALUES (2, 102);
+
+1 row created.
+
+SQL> INSERT INTO supplies VALUES (2, 103);
+
+1 row created.
+
+
+SQL> select * from stock_movement;
+
+MOVEMENT_ID PRODUCT_ID  BRANCH_ID MOVEMENT_
+----------- ---------- ---------- ---------
+        501        101          1 08-JAN-25
+        502        102          1 09-JAN-25
+        503        103          2 10-JAN-25
+
+6 rows selected.
+
+SQL> select * from supplies;
+
+SUPPLIER_ID PRODUCT_ID
+----------- ----------
+          1        101
+          2        102
+          2        103
+
+6 rows selected.
+
+
+
+SQL> INSERT ALL
+  2      INTO outward VALUES (501, 201, DATE '2025-01-15', 'SIVAKASI')
+  3      INTO outward VALUES (502, 202, DATE '2025-01-16', 'MADURAI')
+  4      INTO outward VALUES (503, 203, DATE '2025-01-17', 'VIRUDUNAGAR')
+  5      INTO outward VALUES (504, 204, DATE '2025-01-18', 'CHENNAI')
+  6      INTO outward VALUES (505, 205, DATE '2025-01-19', 'COIMBATORE')
+  7      INTO outward VALUES (506, 206, DATE '2025-01-20', 'TRICHY')
+  8  SELECT 1 FROM dual;
+
+6 rows created.
+
+SQL> select * from outward;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        501        201 15-JAN-25
+SIVAKASI
+
+        502        202 16-JAN-25
+MADURAI
+
+        503        203 17-JAN-25
+VIRUDUNAGAR
+
+
+
+6 rows selected.
+
+///UPDATE COMMAND
+
+SQL> select * from  customer_contact;
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SIVAKASI                                           626123
+9888800011
+
+         2           2 ANNA NAGAR
+MADURAI                                            625020
+9888800022
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- -----------------
+
+
+SQL> UPDATE customer_contact SET address_city = 'Sivakasi'  WHERE contact_id = 1 and customer_id = 1;
+
+1 row updated.
+
+SQL> select * from  customer_contact;
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SALEM                                              626123
+9888800011
+
+         2           2 ANNA NAGAR
+MADURAI                                            625020
+9888800022
+
+
+
+// ISERT VALUE FOR DERIVED ATTRIBUTE USING UPDATE COMMAND
+
+
+SQL> UPDATE employee SET experience = TRUNC(MONTHS_BETWEEN(SYSDATE, join_date) / 12);
+
+5 rows updated.
+
+SQL> select * from employee;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21          5 9000011111
+         1
+
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22          3 9000022222
+         2
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+          4 SATHISH
+WORKER                    22000 18-APR-23          2 9000044444
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+         4
+
+          5 MANI
+DRIVER                    28000 25-MAY-22          3 9000055555
+         5
+
+
+SQL> select * from outward;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        501        201 15-JAN-25
+SIVAKASI
+
+        502        202 16-JAN-25
+MADURAI
+
+SQL> UPDATE outward SET delivery_address = 'TIRUNELVELI' WHERE movement_id = 501;
+
+1 row updated.
+
+SQL> select * from outward;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        501        201 15-JAN-25
+TIRUNELVELI
+
+        502        202 16-JAN-25
+MADURAI
+
+
+// COUNT
+
+SQL> select count(*) as total_vehicle from vehicle;
+
+TOTAL_VEHICLE
+-------------
+            6
+
+
+SQL> select type count(*) as vehicle_count from vehicle group by type;
+select type count(*) as vehicle_count from vehicle group by type
+                 *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select type, count(*) as vehicle_count from vehicle group by type;
+
+TYPE                 VEHICLE_COUNT
+-------------------- -------------
+TRUCK                            3
+VAN                              3
+
+
+//SUM 
+
+SQL> select sum(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+    155000
+
+SQL> select sum(salary), sum(experience) as emp_sal from employee;
+
+SUM(SALARY)    EMP_SAL
+----------- ----------
+     155000         15
+
+//AVERAGE
+
+SQL> select avg(salary), avg(experience) as emp_sal from employee;
+
+AVG(SALARY)    EMP_SAL
+----------- ----------
+      31000          3
+
+
+//MIN
+SQL> select min(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+     22000
+
+SQL> select min(salary),min(experience) as emp_sal from employee;
+
+MIN(SALARY)    EMP_SAL
+----------- ----------
+      22000          2
+
+
+//MAX
+
+SQL> select max(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+     45000
+
+SQL> select max(salary),max(experience) as emp_sal from employee;
+
+MAX(SALARY)    EMP_SAL
+----------- ----------
+      45000          5
+
+
+//GROUP AND HAVING
+
+SQL> select branch_id,count(*) as employee_count from employee group by branch_id;
+
+ BRANCH_ID EMPLOYEE_COUNT
+---------- --------------
+         1              1
+         2              1
+         3              1
+         4              1
+         5              1
+
+SQL> select branch_id,avg(salary) as avg_sal from employee group by branch_id having avg(salary) > 25000;
+
+ BRANCH_ID    AVG_SAL
+---------- ----------
+         1      45000
+         2      35000
+         5      28000
+
+
+
+SQL> SELECT address_city, COUNT(*) AS contact_count FROM customer_contact  WHERE address_city = 'MADURAI'  GROUP BY address_city;
+
+ADDRESS CONTACT_COUNT
+------- -------------
+MADURAI             1
+
+
+/// group by mutli valued
+
+SQL> select branch_id,type from vehicle group by branch_id,type;
+
+ BRANCH_ID TYPE
+---------- --------------------
+         1 TRUCK
+         2 VAN
+         3 TRUCK
+         4 VAN
+         5 TRUCK
+         6 VAN
+
+6 rows selected.
+
+
+//BETWEEN
+
+SQL> select * from employee where salary between 20000 and 30000;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+          4 SATHISH
+WORKER                    22000 18-APR-23          2 9000044444
+         4
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+          5 MANI
+DRIVER                    28000 25-MAY-22          3 9000055555
+         5
+
+
+
+SQL> select * from outward where sale_id between  200 and 204;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        501        201 15-JAN-25
+TIRUNELVELI
+
+        502        202 16-JAN-25
+MADURAI
+
+        503        203 17-JAN-25
+VIRUDUNAGAR
+
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        504        204 18-JAN-25
+CHENNAI
+
+
+//NOT BETWEEN
+
+SQL> select * from employee where salary not  between 20000 and 30000;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21          5 9000011111
+         1
+
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22          3 9000022222
+         2
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+
+SQL> select * from outward where sale_id not  between  200 and 204;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        505        205 19-JAN-25
+COIMBATORE
+
+        506        206 20-JAN-25
+TRICHY
+
+
+//IN FUNCTION
+
+SQL> SELECT * FROM customer_contact WHERE address_city IN ('MADURAI', 'CHENNAI');
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         2           2 ANNA NAGAR
+MADURAI                                            625020
+9888800022
+
+         4           4 NORTH AVE
+CHENNAI                                            600040
+9888800044
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+
+
+SQL> SELECT * FROM stock_movement WHERE branch_id IN (1, 2);
+
+MOVEMENT_ID PRODUCT_ID  BRANCH_ID MOVEMENT_
+----------- ---------- ---------- ---------
+        501        101          1 08-JAN-25
+        502        102          1 09-JAN-25
+        503        103          2 10-JAN-25
+        504        104          2 11-JAN-25
+
+
+//`NOT IN
+
+
+SQL> SELECT *
+  2  FROM customer_contact
+  3  WHERE address_city NOT IN ('MADURAI', 'CHENNAI');
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SALEM                                              626123
+9888800011
+
+         3           3 EAST STREET
+VIRUDUNAGAR                                        626001
+9888800033
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+
+         5           5 RS PURAM
+COIMBATORE                                         641002
+9888800055
+
+         6           6 CANTONMENT
+TRICHY                                             620001
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+9888800066
+
+
+
+
+// merge to table
+
+
+SQL> CREATE TABLE vehicle_new (
+  2      vehicle_id INT,
+  3      vehicle_number VARCHAR2(50),
+  4      type VARCHAR2(20),
+  5      branch_id INT
+  6  );
+
+Table created.
+
+SQL> MERGE INTO vehicle v
+  2  USING vehicle_new t
+  3  ON (v.vehicle_id = t.vehicle_id)
+  4  WHEN MATCHED THEN
+  5      UPDATE SET
+  6          v.vehicle_number = t.vehicle_number,
+  7          v.type = t.type,
+  8          v.branch_id = t.branch_id
+  9  WHEN NOT MATCHED THEN
+ 10      INSERT (vehicle_id, vehicle_number, type, branch_id)
+ 11      VALUES (t.vehicle_id, t.vehicle_number, t.type, t.branch_id);
+
+2 rows merged.
+
+SQL>
+
+
+//STRING FUNCTION
+//UPPER
+SQL> SELECT UPPER(employee_name) FROM employee;
+
+UPPER(EMPLOYEE_NAME)
+--------------------------------------------------
+ARUN
+KUMAR
+RAVI
+SATHISH
+MANI
+
+
+//LOWER
+
+SQL> SELECT LOWER(customer_name) FROM customer;
+
+LOWER(CUSTOMER_NAME)
+--------------------------------------------------
+rajesh
+anita
+suresh
+meena
+karthik
+priya
+
+6 rows selected.
+
+//length
+
+
+SQL> SELECT category_name, LENGTH(category_name) FROM product_category;
+
+CATEGORY_NAME                                      LENGTH(CATEGORY_NAME)
+-------------------------------------------------- ---------------------
+ELECTRONICS                                                           11
+OFFICE EQUIPMENT                                                      16
+NETWORKING                                                            10
+FURNITURE                                                              9
+ACCESSORIES                                                           11
+STORAGE                                                                7
+
+6 rows selected.
+
+
+//INITCAP
+
+INITCAP(SUPPLIER_NAME)
+--------------------------------------------------
+Abc Suppliers
+Xyz Traders
+Nova Distributors
+Star Supply
+Omega Corp
+Delta Enterprises
+
+6 rows selected.
+
+
+//SUBSTRING
+
+SUBSTR(VEHIC
+------------
+TN0
+TN0
+TN0
+TN0
+TN0
+TN0
+
+6 rows selected.
+
+
+// COUNT
+
+SQL> select count(*) as total_vehicle from vehicle;
+
+TOTAL_VEHICLE
+-------------
+            6
+
+
+SQL> select type count(*) as vehicle_count from vehicle group by type;
+select type count(*) as vehicle_count from vehicle group by type
+                 *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> select type, count(*) as vehicle_count from vehicle group by type;
+
+TYPE                 VEHICLE_COUNT
+-------------------- -------------
+TRUCK                            3
+VAN                              3
+
+
+//SUM 
+
+SQL> select sum(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+    155000
+
+SQL> select sum(salary), sum(experience) as emp_sal from employee;
+
+SUM(SALARY)    EMP_SAL
+----------- ----------
+     155000         15
+
+//AVERAGE
+
+SQL> select avg(salary), avg(experience) as emp_sal from employee;
+
+AVG(SALARY)    EMP_SAL
+----------- ----------
+      31000          3
+
+
+//MIN
+SQL> select min(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+     22000
+
+SQL> select min(salary),min(experience) as emp_sal from employee;
+
+MIN(SALARY)    EMP_SAL
+----------- ----------
+      22000          2
+
+
+//MAX
+
+SQL> select max(salary) as emp_sal from employee;
+
+   EMP_SAL
+----------
+     45000
+
+SQL> select max(salary),max(experience) as emp_sal from employee;
+
+MAX(SALARY)    EMP_SAL
+----------- ----------
+      45000          5
+
+
+//GROUP AND HAVING
+
+SQL> select branch_id,count(*) as employee_count from employee group by branch_id;
+
+ BRANCH_ID EMPLOYEE_COUNT
+---------- --------------
+         1              1
+         2              1
+         3              1
+         4              1
+         5              1
+
+SQL> select branch_id,avg(salary) as avg_sal from employee group by branch_id having avg(salary) > 25000;
+
+ BRANCH_ID    AVG_SAL
+---------- ----------
+         1      45000
+         2      35000
+         5      28000
+
+
+
+SQL> SELECT address_city, COUNT(*) AS contact_count FROM customer_contact  WHERE address_city = 'MADURAI'  GROUP BY address_city;
+
+ADDRESS CONTACT_COUNT
+------- -------------
+MADURAI             1
+
+
+/// group by mutli valued
+
+SQL> select branch_id,type from vehicle group by branch_id,type;
+
+ BRANCH_ID TYPE
+---------- --------------------
+         1 TRUCK
+         2 VAN
+         3 TRUCK
+         4 VAN
+         5 TRUCK
+         6 VAN
+
+6 rows selected.
+
+
+//BETWEEN
+
+SQL> select * from employee where salary between 20000 and 30000;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+          4 SATHISH
+WORKER                    22000 18-APR-23          2 9000044444
+         4
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+          5 MANI
+DRIVER                    28000 25-MAY-22          3 9000055555
+         5
+
+
+
+SQL> select * from outward where sale_id between  200 and 204;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        501        201 15-JAN-25
+TIRUNELVELI
+
+        502        202 16-JAN-25
+MADURAI
+
+        503        203 17-JAN-25
+VIRUDUNAGAR
+
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        504        204 18-JAN-25
+CHENNAI
+
+
+//NOT BETWEEN
+
+SQL> select * from employee where salary not  between 20000 and 30000;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21          5 9000011111
+         1
+
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22          3 9000022222
+         2
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+
+SQL> select * from outward where sale_id not  between  200 and 204;
+
+MOVEMENT_ID    SALE_ID DISPATCH_
+----------- ---------- ---------
+DELIVERY_ADDRESS
+--------------------------------------------------
+        505        205 19-JAN-25
+COIMBATORE
+
+        506        206 20-JAN-25
+TRICHY
+
+
+//IN FUNCTION
+
+SQL> SELECT * FROM customer_contact WHERE address_city IN ('MADURAI', 'CHENNAI');
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         2           2 ANNA NAGAR
+MADURAI                                            625020
+9888800022
+
+         4           4 NORTH AVE
+CHENNAI                                            600040
+9888800044
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+
+
+SQL> SELECT * FROM stock_movement WHERE branch_id IN (1, 2);
+
+MOVEMENT_ID PRODUCT_ID  BRANCH_ID MOVEMENT_
+----------- ---------- ---------- ---------
+        501        101          1 08-JAN-25
+        502        102          1 09-JAN-25
+        503        103          2 10-JAN-25
+        504        104          2 11-JAN-25
+
+
+//`NOT IN
+
+
+SQL> SELECT *
+  2  FROM customer_contact
+  3  WHERE address_city NOT IN ('MADURAI', 'CHENNAI');
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SALEM                                              626123
+9888800011
+
+         3           3 EAST STREET
+VIRUDUNAGAR                                        626001
+9888800033
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+
+         5           5 RS PURAM
+COIMBATORE                                         641002
+9888800055
+
+         6           6 CANTONMENT
+TRICHY                                             620001
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+9888800066
+
+
+
+
+// merge to table
+
+
+SQL> CREATE TABLE vehicle_new (
+  2      vehicle_id INT,
+  3      vehicle_number VARCHAR2(50),
+  4      type VARCHAR2(20),
+  5      branch_id INT
+  6  );
+
+Table created.
+
+SQL> MERGE INTO vehicle v
+  2  USING vehicle_new t
+  3  ON (v.vehicle_id = t.vehicle_id)
+  4  WHEN MATCHED THEN
+  5      UPDATE SET
+  6          v.vehicle_number = t.vehicle_number,
+  7          v.type = t.type,
+  8          v.branch_id = t.branch_id
+  9  WHEN NOT MATCHED THEN
+ 10      INSERT (vehicle_id, vehicle_number, type, branch_id)
+ 11      VALUES (t.vehicle_id, t.vehicle_number, t.type, t.branch_id);
+
+2 rows merged.
+
+SQL>
+
+
+//STRING FUNCTION
+//UPPER
+SQL> SELECT UPPER(employee_name) FROM employee;
+
+UPPER(EMPLOYEE_NAME)
+--------------------------------------------------
+ARUN
+KUMAR
+RAVI
+SATHISH
+MANI
+
+
+//LOWER
+
+SQL> SELECT LOWER(customer_name) FROM customer;
+
+LOWER(CUSTOMER_NAME)
+--------------------------------------------------
+rajesh
+anita
+suresh
+meena
+karthik
+priya
+
+6 rows selected.
+
+//length
+
+
+SQL> SELECT category_name, LENGTH(category_name) FROM product_category;
+
+CATEGORY_NAME                                      LENGTH(CATEGORY_NAME)
+-------------------------------------------------- ---------------------
+ELECTRONICS                                                           11
+OFFICE EQUIPMENT                                                      16
+NETWORKING                                                            10
+FURNITURE                                                              9
+ACCESSORIES                                                           11
+STORAGE                                                                7
+
+6 rows selected.
+
+
+//INITCAP
+
+INITCAP(SUPPLIER_NAME)
+--------------------------------------------------
+Abc Suppliers
+Xyz Traders
+Nova Distributors
+Star Supply
+Omega Corp
+Delta Enterprises
+
+6 rows selected.
+
+
+//SUBSTRING
+
+SUBSTR(VEHIC
+------------
+TN0
+TN0
+TN0
+TN0
+TN0
+TN0
+
+6 rows selected.
+
+//INSTR
+
+
+SQL> SELECT customer_email, INSTR(customer_email, '@')
+  2  FROM customer;
+
+CUSTOMER_EMAIL                                     INSTR(CUSTOMER_EMAIL,'@')
+-------------------------------------------------- -------------------------
+rajesh@gmail.com                                                           7
+anita@gmail.com                                                            6
+suresh@gmail.com                                                           7
+meena@gmail.com                                                            6
+karthik@gmail.com                                                          8
+priya@gmail.com                                                            6
+
+6 rows selected.
+
+
+//CONCAT
+
+
+SQL> SELECT CONCAT(employee_name, role)
+  2  FROM employee;
+
+CONCAT(EMPLOYEE_NAME,ROLE)
+----------------------------------------------------------------------
+ARUNMANAGER
+KUMARSUPERVISOR
+RAVICLERK
+SATHISHWORKER
+MANIDRIVER
+
+
+
+//Concatenation Operator
+
+SQL> SELECT supplier_name || ' - ' || supplier_phone_number
+  2  FROM supplier;
+
+SUPPLIER_NAME||'-'||SUPPLIER_PHONE_NUMBER
+-------------------------------------------------------------------------
+ABC SUPPLIERS - 9876543210
+XYZ TRADERS - 9123456780
+NOVA DISTRIBUTORS - 9001112233
+STAR SUPPLY - 9887766554
+OMEGA CORP - 9554433221
+DELTA ENTERPRISES - 9445566778
+
+6 rows selected.
+
+//TRIM
+
+SQL> SELECT TRIM(customer_name)
+  2  FROM customer;
+
+TRIM(CUSTOMER_NAME)
+--------------------------------------------------
+RAJESH
+ANITA
+SURESH
+MEENA
+KARTHIK
+PRIYA
+
+6 rows selected.
+
+//LTRIM
+
+
+SQL> SELECT LTRIM(category_name)
+  2  FROM product_category;
+
+LTRIM(CATEGORY_NAME)
+--------------------------------------------------
+ELECTRONICS
+OFFICE EQUIPMENT
+NETWORKING
+FURNITURE
+ACCESSORIES
+STORAGE
+
+6 rows selected.
+
+
+//RTRIM
+
+SQL> SELECT RTRIM(category_name)
+  2  FROM product_category;
+
+RTRIM(CATEGORY_NAME)
+--------------------------------------------------
+ELECTRONICS
+OFFICE EQUIPMENT
+NETWORKING
+FURNITURE
+ACCESSORIES
+STORAGE
+
+6 rows selected.
+
+//REPLACE
+
+SQL> SELECT REPLACE(customer_email, 'gmail.com', 'company.com')
+  2  FROM customer;
+
+REPLACE(CUSTOMER_EMAIL,'GMAIL.COM','COMPANY.COM')
+--------------------------------------------------------------------------------
+rajesh@company.com
+anita@company.com
+suresh@company.com
+meena@company.com
+karthik@company.com
+priya@company.com
+
+6 rows selected.
+
+
+//LPAD
+
+SQL> SELECT LPAD(vehicle_number, 15, '*')
+  2  FROM vehicle;
+
+LPAD(VEHICLE_NUMBER,15,'*')
+------------------------------------------------------------
+*****TN01AB1234
+*****TN02CD5678
+*****TN03EF9012
+*****TN04GH3456
+*****TN05IJ7890
+*****TN06KL1122
+
+6 rows selected.
+
+//RPAD
+
+SQL> SELECT RPAD(employee_name, 15, '-')
+  2  FROM employee;
+
+RPAD(EMPLOYEE_NAME,15,'-')
+------------------------------------------------------------
+ARUN-----------
+KUMAR----------
+RAVI-----------
+SATHISH--------
+MANI-----------
+
+
+//ASCII
+
+SQL> SELECT employee_name, ASCII(employee_name)
+  2  FROM employee;
+
+EMPLOYEE_NAME                                      ASCII(EMPLOYEE_NAME)
+-------------------------------------------------- --------------------
+ARUN                                                                 65
+KUMAR                                                                75
+RAVI                                                                 82
+SATHISH                                                              83
+MANI                                                                 77
+
+
+
+//DATE FUNCTIONS
+//SYSDATE
+
+
+SQL> SELECT SYSDATE FROM dual;
+
+SYSDATE
+---------
+12-FEB-26
+
+//ADD MONTHS TO DATE
+
+SQL> SELECT employee_name, ADD_MONTHS(join_date, 6)
+  2  FROM employee;
+
+EMPLOYEE_NAME                                      ADD_MONTH
+-------------------------------------------------- ---------
+ARUN                                               10-JUL-21
+KUMAR                                              15-AUG-22
+RAVI                                               20-SEP-23
+SATHISH                                            18-OCT-23
+MANI                                               25-NOV-22
+
+
+//MONTHS BETWEEN TWO DATES
+
+SQL> SELECT employee_name,MONTHS_BETWEEN(SYSDATE, join_date) AS months_worked FROM employee;
+
+EMPLOYEE_NAME                                      MONTHS_WORKED
+-------------------------------------------------- -------------
+ARUN                                                   61.073856
+KUMAR                                                 47.9125657
+RAVI                                                  34.7512754
+SATHISH                                               33.8157915
+MANI                                                  44.5899851
+
+SQL> SELECT employee_name, trunc(MONTHS_BETWEEN(SYSDATE, join_date)) AS months_worked FROM employee;
+
+EMPLOYEE_NAME                                      MONTHS_WORKED
+-------------------------------------------------- -------------
+ARUN                                                          61
+KUMAR                                                         47
+RAVI                                                          34
+SATHISH                                                       33
+MANI                                                          44
+
+//ROUND  JION DATE TO NEAREST MONTH
+
+SQL> select join_date from employee;
+
+JOIN_DATE
+---------
+10-JAN-21
+15-FEB-22
+20-MAR-23
+18-APR-23
+25-MAY-22
+
+QL> SELECT employee_name, ROUND(join_date, 'MONTH')
+  2  FROM employee;
+
+EMPLOYEE_NAME                                      ROUND(JOI
+-------------------------------------------------- ---------
+ARUN                                               01-JAN-21
+KUMAR                                              01-FEB-22
+RAVI                                               01-APR-23
+SATHISH                                            01-MAY-23
+MANI                                               01-JUN-22
+
+//EXTRACT
+//YEAR FROM JION DATE
+
+
+
+SQL> SELECT employee_name, EXTRACT(YEAR FROM join_date) FROM employee;
+
+EMPLOYEE_NAME                                      EXTRACT(YEARFROMJOIN_DATE)
+-------------------------------------------------- --------------------------
+ARUN                                                                     2021
+KUMAR                                                                    2022
+RAVI                                                                     2023
+SATHISH                                                                  2023
+MANI                                                                     2022
+
+SQL> SELECT employee_name, EXTRACT(MONTH FROM join_date) FROM employee;
+
+EMPLOYEE_NAME                                      EXTRACT(MONTHFROMJOIN_DATE)
+-------------------------------------------------- ---------------------------
+ARUN                                                                         1
+KUMAR                                                                        2
+RAVI                                                                         3
+SATHISH                                                                      4
+MANI                                                                         5
+
+//TO CHAR
+
+SQL> select to_char(join_date,'MONTH') from employee;
+
+TO_CHAR(JOIN_DATE,'MONTH')
+------------------------------------
+JANUARY
+FEBRUARY
+MARCH
+APRIL
+MAY
+
+
+SQL> select to_char(join_date,'year') from employee;
+
+TO_CHAR(JOIN_DATE,'YEAR')
+------------------------------------------
+twenty twenty-one
+twenty twenty-two
+twenty twenty-three
+twenty twenty-three
+twenty twenty-two
+
+SQL> select to_char(join_date,'day') from employee;
+
+TO_CHAR(JOIN_DATE,'DAY')
+------------------------------------
+sunday
+tuesday
+monday
+tuesday
+wednesday
+
+
+//LAST_DAY
+SQL> SELECT employee_name, LAST_DAY(join_date)
+  2  FROM employee;
+
+EMPLOYEE_NAME                                      LAST_DAY(
+-------------------------------------------------- ---------
+ARUN                                               31-JAN-21
+KUMAR                                              28-FEB-22
+RAVI                                               31-MAR-23
+SATHISH                                            30-APR-23
+MANI                                               31-MAY-22
+ 
+//NEXT_DAY
+SQL> SELECT employee_name, NEXT_DAY(join_date, 'MONDAY')
+  2  FROM employee;
+
+EMPLOYEE_NAME                                      NEXT_DAY(
+-------------------------------------------------- ---------
+ARUN                                               11-JAN-21
+KUMAR                                              21-FEB-22
+RAVI                                               27-MAR-23
+SATHISH                                            24-APR-23
+MANI                                               30-MAY-22
+
+//N
+NUMBER FUNCTIONS
+
+//ABS
+
+
+SQL> SELECT ABS(salary - 50000)
+  2  FROM employee;
+
+ABS(SALARY-50000)
+-----------------
+             5000
+            15000
+            25000
+            28000
+            22000
+
+//ROUND
+
+SELECT ROUND(AVG(salary))FROM employee;
+ 
+ROUND(AVG(SALARY))
+------------------
+             31000
+
+SQL> SELECT ROUND(AVG(salary),-5)FROM employee;
+
+ROUND(AVG(SALARY),-5)
+---------------------
+                    0
+
+
+SQL> SELECT ROUND(AVG(salary),-4)FROM employee;
+
+ROUND(AVG(SALARY),-4)
+---------------------
+                30000
+
+
+//TRUNC
+
+
+SQL> SELECT TRUNC(AVG(salary)) FROM employee;
+
+TRUNC(AVG(SALARY))
+------------------
+             31000
+
+//CEIL
+
+SQL> SELECT CEIL(AVG(experience))
+  2  FROM employee;
+
+CEIL(AVG(EXPERIENCE))
+---------------------
+                    3
+
+SQL> SELECT CEIL(experience)
+  2  FROM employee;
+
+CEIL(EXPERIENCE)
+----------------
+               5
+               3
+               2
+               2
+               3
+
+//FLOOR
+
+SQL> SELECT FLOOR(salary)
+  2  FROM employee;
+
+FLOOR(SALARY)
+-------------
+        45000
+        35000
+        25000
+        22000
+        28000
+
+//MOD
+
+
+SQL> SELECT employee_id, MOD(salary, 100)
+  2  FROM employee;
+
+EMPLOYEE_ID MOD(SALARY,100)
+----------- ---------------
+          1               0
+          2               0
+          3               0
+          4               0
+          5               0
+
+//POWER
+
+SQL> SELECT employee_id, POWER(experience, 2)
+  2  FROM employee;
+
+EMPLOYEE_ID POWER(EXPERIENCE,2)
+----------- -------------------
+          1                  25
+          2                   9
+          3                   4
+          4                   4
+          5                   9
+
+//SQRT
+
+SQL> SELECT employee_id, SQRT(salary)
+  2  FROM employee;
+
+EMPLOYEE_ID SQRT(SALARY)
+----------- ------------
+          1   212.132034
+          2   187.082869
+          3   158.113883
+          4    148.32397
+          5   167.332005
+
+
+//SIGN
+
+SQL> SELECT SIGN(salary - 40000)
+  2  FROM employee;
+
+SIGN(SALARY-40000)
+------------------
+                 1
+                -1
+                -1
+                -1
+                -1
+
+SQL> SELECT SIGN(salary - 4000)
+  2  FROM employee;
+
+SIGN(SALARY-4000)
+-----------------
+                1
+                1
+                1
+                1
+                1
+
+//EXPONENTIAL
+
+SQL> SELECT employee_id, EXP(experience)
+  2  FROM employee;
+
+EMPLOYEE_ID EXP(EXPERIENCE)
+----------- ---------------
+          1      148.413159
+          2      20.0855369
+          3       7.3890561
+          4       7.3890561
+          5      20.0855369
+
+SQL> SELECT employee_id, LN(salary)
+  2  FROM employee;
+
+//NATURAL LN
+
+EMPLOYEE_ID LN(SALARY)
+----------- ----------
+          1 10.7144178
+          2 10.4631033
+          3 10.1266311
+          4 9.99879773
+          5 10.2399598
+
+SQL> SELECT employee_id, LOG(10, salary)
+  2  FROM employee;
+
+//LOG
+
+EMPLOYEE_ID LOG(10,SALARY)
+----------- --------------
+          1     4.65321251
+          2     4.54406804
+          3     4.39794001
+          4     4.34242268
+          5     4.44715803
+
+//COUNT BY DISTINCT
+
+SQL> SELECT COUNT(DISTINCT type) AS unique_types FROM vehicle;
+
+UNIQUE_TYPES
+------------
+           2
+
+//LIKE COMMAND
+SQL> SELECT * FROM employee WHERE employee_name LIKE 'A%';
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21          5 9000011111
+         1
+
+
+
+SQL> SELECT * FROM customerWHERE customer_email LIKE '%gmail%';
+
+CUSTOMER_ID CUSTOMER_NAME
+----------- --------------------------------------------------
+CUSTOMER_EMAIL
+--------------------------------------------------
+          1 RAJESH
+rajesh@gmail.com
+
+          2 ANITA
+anita@gmail.com
+
+          3 SURESH
+suresh@gmail.com
+
+SQL> SELECT * FROM employee WHERE employee_name NOT LIKE 'A%';
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22          3 9000022222
+         2
+
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+
+
+SQL>  SELECT * FROM employee WHERE employee_name LIKE '%I';
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+          5 MANI
+DRIVER                    28000 25-MAY-22          3 9000055555
+         5
+
+
+
+// GROUP BY MUTIPLE 
+
+
+SQL> SELECT branch_id, type, COUNT(*) AS total_vehicles
+  2  FROM vehicle
+  3  GROUP BY branch_id, type;
+
+ BRANCH_ID TYPE                 TOTAL_VEHICLES
+---------- -------------------- --------------
+         1 TRUCK                             1
+         2 VAN                               1
+         3 TRUCK                             1
+         4 VAN                               1
+         5 TRUCK                             1
+         6 VAN                             DELETE FROM vehicle
+WHERE type = 'Truck'
+AND branch_id = 1;
+  1
+
+6 rows selected.
+
+
+// UPDATE USING MULTIPLE CONDITION
+
+
+SQL> select * from customer_contact;
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+SALEM                                              626123
+9888800011
+
+SQL> UPDATE customer_contact SET address_city = 'Sivakasi'  WHERE contact_id = 1 and customer_id = 1;
+
+1 row updated.
+
+
+SQL> select * from customer_contact;
+
+CONTACT_ID CUSTOMER_ID ADDRESS_STREET
+---------- ----------- --------------------------------------------------
+ADDRESS_CITY                                       ADDRESS_PINCODE
+-------------------------------------------------- --------------------
+CUSTOMER_PHONE_NUMBE
+--------------------
+         1           1 MG ROAD
+Sivakasi                                           626123
+9888800011
+
+//DELETE
+
+
+SQL> DELETE FROM supplies WHERE supplier_id = 2 AND product_id = 102;
+
+1 row deleted.
+
+SQL> select * from supplies;
+
+SUPPLIER_ID PRODUCT_ID
+----------- ----------
+          1        101
+          2        103
+          3        104
+          3        105
+          4        106
+
+
+//DELETE ALL ROWS IN THE TABLE
+
+
+SQL> select * from supplies;
+
+SUPPLIER_ID PRODUCT_ID
+----------- ----------
+          1        101
+          2        103
+          3        104
+          3        105
+          4        106
+
+SQL> delete from supplies;
+
+5 rows deleted.
+
+SQL> select * from supplies;
+
+no rows selected
+
+//DECODE
+
+
+SQL> select customer_id,address_city,DECODE(address_city,'Sivakasi','RURAL','MADURAI','METRO','OTHERS')as DECODE from customer_contact;
+
+CUSTOMER_ID ADDRESS_CITY                                       DECODE
+----------- -------------------------------------------------- ------
+          1 Sivakasi                                           RURAL
+          2 MADURAI                                            METRO
+          3 VIRUDUNAGAR                                        OTHERS
+          4 CHENNAI                                            OTHERS
+          5 COIMBATORE                                         OTHERS
+          6 TRICHY                                             OTHERS
+
+6 rows selected.
+
+
+// VIOLATE THE PRIMARY KEY
+
+SQL> INSERT INTO employee VALUES (1, 'Ravi', 'Manager', 50000, SYSDATE, 5, '9876543210', 1);
+INSERT INTO employee
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SYSTEM.PK_EMPLOYEE) violated
+
+
+SQL> select * from employee;
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+          1 ARUN
+MANAGER                   45000 10-JAN-21          5 9000011111
+         1
+
+          2 KUMAR
+SUPERVISOR                35000 15-FEB-22          3 9000022222
+         2
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID
+----------
+
+          3 RAVI
+CLERK                     25000 20-MAR-23          2 9000033333
+         3
+
+
+//ORDER BY
+
+SQL> select salary from employee order by salary ;
+
+    SALARY
+----------
+     22000
+     25000
+     28000
+     35000
+     45000
+
+
+SQL> select salary,employee_name from employee order by salary,employee_name ;
+
+    SALARY EMPLOYEE_NAME
+---------- --------------------------------------------------
+     22000 SATHISH
+     25000 RAVI
+     28000 MANI
+     35000 KUMAR
+     45000 ARUN
+
+
+//DESCENDING
+
+SQL> select salary from employee order by salary desc ;
+
+    SALARY
+----------
+     45000
+     35000
+     28000
+     25000
+     22000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

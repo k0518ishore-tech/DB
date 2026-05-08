@@ -1,0 +1,645 @@
+// BEFORE INSERT
+
+1.)TRIGGER TO BEFORE INSERT FOR CUSTOMER NAME SHOULD NOT BE NULL
+
+SQL> CREATE OR REPLACE TRIGGER before_insert_customer
+  2  BEFORE INSERT ON customer
+  3  FOR EACH ROW
+  4  BEGIN
+  5      IF :NEW.customer_name IS NULL THEN
+  6          RAISE_APPLICATION_ERROR(-20001,'Customer name cannot be null');
+  7      END IF;
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> INSERT INTO CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME) VALUES (25,NULL);
+INSERT INTO CUSTOMER (CUSTOMER_ID,CUSTOMER_NAME) VALUES (25,NULL)
+            *
+ERROR at line 1:
+ORA-20001: Customer name cannot be null
+ORA-06512: at "SYSTEM.BEFORE_INSERT_CUSTOMER", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.BEFORE_INSERT_CUSTOMER'
+
+//AFTER INSERT
+2.)TRIGGER TO FIRE AFTER A NEW EMPLOYEE CREATED TO DISPLAY THEIR NAME
+
+SQL> CREATE OR REPLACE TRIGGER after_insert_employee AFTER INSERT ON employee FOR EACH ROW
+  2  BEGIN
+  3     DBMS_OUTPUT.PUT_LINE('New employee inserted: ' || :NEW.employee_id);
+  4  END;
+  5  /
+
+Trigger created.
+
+SQL> INSERT INTO employee VALUES (25,'VISHNU','MANAGER',75000,SYSDATE,3,254796456,2,'JUNIOR','SIVAKASI');
+New employee inserted: 25
+
+1 row created.
+
+//BEFORE DELETE
+
+3.)3.) Trigger to fire before deleting a supplier
+
+
+SQL> CREATE OR REPLACE TRIGGER before_delete_supplier BEFORE DELETE ON supplier FOR EACH ROW
+  2  DECLARE
+  3     v_count NUMBER;
+  4  BEGIN
+  5     SELECT COUNT(*) INTO v_count FROM supplies WHERE supplier_id = :OLD.supplier_id;
+  6     IF v_count > 0 THEN
+  7        RAISE_APPLICATION_ERROR(-20002,'Supplier supplies products. Cannot delete.');
+  8     END IF;
+  9  END;
+ 10  /
+
+Trigger created.
+
+SQL>  DELETE FROM supplier WHERE supplier_id = 1;
+ DELETE FROM supplier WHERE supplier_id = 1
+             *
+ERROR at line 1:
+ORA-20002: Supplier supplies products. Cannot delete.
+ORA-06512: at "SYSTEM.BEFORE_DELETE_SUPPLIER", line 6
+ORA-04088: error during execution of trigger 'SYSTEM.BEFORE_DELETE_SUPPLIER'
+
+
+SQL>  DELETE FROM supplier WHERE supplier_id = 25;
+
+1 row deleted.
+
+SQL>
+
+//AFTER DELETE
+
+4) TRIGGER TO RISE AFTER A ROW DELETE THAT BY SHOWING THEIR DETAILSLM 7A][dlj v
+
+SQL> CREATE OR REPLACE TRIGGER after_delete_vehicle AFTER DELETE ON vehicle FOR EACH ROW
+  2  BEGIN
+  3     DBMS_OUTPUT.PUT_LINE('Vehicle deleted: ' || :OLD.vehicle_number);
+  4  END;
+  5  /
+
+Trigger created.
+
+SQL> DELETE FROM VEHICLE WHERE VEHICLE_ID = 19;
+Vehicle deleted: TN04GH3458
+
+1 row deleted.
+
+//BEFORE UPDATE
+5) TRIGGER WHEN SALARY IS NEGATIVE
+
+SQL> CREATE OR REPLACE TRIGGER before_update_employee BEFORE UPDATE ON employee FOR EACH ROW
+  2  BEGIN
+  3     IF :NEW.salary < 0 THEN
+  4        RAISE_APPLICATION_ERROR(-20003,'Salary cannot be negative');
+  5     END IF;
+  6  END;
+  7  /
+
+Trigger created.
+
+
+SQL> UPDATE employee SET salary=-5000 WHERE employee_id=25;
+UPDATE employee SET salary=-5000 WHERE employee_id=25
+       *
+ERROR at line 1:
+ORA-20003: Salary cannot be negative
+ORA-06512: at "SYSTEM.BEFORE_UPDATE_EMPLOYEE", line 3
+ORA-04088: error during execution of trigger 'SYSTEM.BEFORE_UPDATE_EMPLOYEE'
+
+
+SQL> UPDATE employee SET salary=155000 WHERE employee_id=25;
+
+1 row updated.
+
+//AFTER UPDATE
+
+6 )
+
+
+SQL> CREATE OR REPLACE TRIGGER after_update_employee AFTER UPDATE ON employee FOR EACH ROW
+  2  BEGIN
+  3     DBMS_OUTPUT.PUT_LINE('Employee ' || :OLD.employee_id ||
+  4                          ' updated. New Salary: ' || :NEW.salary);
+  5  END;
+  6  /
+
+Trigger created.
+
+SQL>
+SQL> UPDATE employee SET salary=100000 WHERE employee_id=25;
+Employee 25 updated. New Salary: 100000
+
+1 row updated.
+
+
+7) TRIGGER TO INSERT A SAME ROW INTO EMPLOYEE_COPY AFTER A NEW RECORD INSERTED INTO EMPLOYEE
+
+SQL> CREATE OR REPLACE TRIGGER ain_employee
+  2  AFTER INSERT ON employee
+  3  FOR EACH ROW
+  4  BEGIN
+  5  INSERT INTO employee_copy
+  6  (employee_id, employee_name, role, salary, join_date, experience, employee_phone, branch_id)
+  7  VALUES
+  8  (:NEW.employee_id, :NEW.employee_name, :NEW.role, :NEW.salary,
+  9   :NEW.join_date, :NEW.experience, :NEW.employee_phone, :NEW.branch_id);
+ 10  END;
+ 11  /
+
+Trigger created.
+
+SQL>  INSERT INTO employee VALUES (47, 'RAHUL', 'MANAGER', 55000, SYSDATE, 5, '9876543210', 1, 'SENIOR', 'SIVAKASI');
+New employee inserted: 47
+
+1 row created.
+
+SQL> SELECT * FROM EMPLOYEE_COPY WHERE EMPLOYEE_ID = 47;
+
+
+EMPLOYEE_ID EMPLOYEE_NAME
+----------- --------------------------------------------------
+ROLE                     SALARY JOIN_DATE EXPERIENCE EMPLOYEE_PHONE
+-------------------- ---------- --------- ---------- --------------------
+ BRANCH_ID EMPLOYEE_EXP              EXP_LEVEL
+---------- ------------------------- --------------------
+         47 RAHUL
+MANAGER                   55000 25-MAR-26          5 9876543210
+         1
+
+8) INSERT AFTER UPDATE
+
+SQL> CREATE OR REPLACE TRIGGER emp_count_update
+  2  AFTER INSERT ON employee
+  3  FOR EACH ROW
+  4  BEGIN
+  5  uPDATE warehouse_branch
+  6  SET total_employees = total_employees + 1
+  7  WHERE branch_id = :NEW.branch_id;
+  8  END;
+  9  /
+
+Trigger created.
+
+
+SQL> SELECT branch_id, total_employees FROM warehouse_branch;
+
+ BRANCH_ID TOTAL_EMPLOYEES
+---------- ---------------
+         7               1
+         8               1
+         9               1
+         1               4
+         2               8
+         3               4
+         4               2
+         5               2
+         6               0
+
+9 rows selected.
+
+SQL>  INSERT INTO employee (employee_id, employee_name, role, salary, join_date, experience, employee_phone, branch_id)  VALUES (48, 'GOVRESH', 'CLERK', 25000, SYSDATE, 2, '9876500000', 3);
+New employee inserted: 48
+
+1 row created.
+
+ BRANCH_ID TOTAL_EMPLOYEES
+---------- ---------------
+         7               1
+         8               1
+         9               1
+         1               4
+         2               8
+         3               5
+         4               2
+         5               2
+         6               0
+
+9 rows selected.
+
+//COMPOUND TRIGGER
+
+SQL>  CREATE OR REPLACE TRIGGER compound_trigger_customer_contact
+  2      FOR INSERT OR DELETE ON customer_contact
+  3      COMPOUND TRIGGER
+  4        BEFORE EACH ROW IS
+  5      BEGIN
+  6         IF INSERTING THEN
+  7            DBMS_OUTPUT.PUT_LINE('New contact added for customer ' || :NEW.customer_id);
+  8         END IF;
+  9     END BEFORE EACH ROW;
+ 10      AFTER EACH ROW IS
+ 11     BEGIN
+ 12        IF DELETING THEN
+ 13           DBMS_OUTPUT.PUT_LINE('Contact removed for customer ' || :OLD.customer_id);
+ 14        END IF;
+ 15     END AFTER EACH ROW;
+ 16
+ 17     END compound_trigger_customer_contact;
+ 18     /
+
+Trigger created.
+SQL> INSERT INTO customer_contact VALUES (25, 5, 'KANNNA NAGAR', 'SIVAKASI', '626123', '9876543210');
+New contact added for customer 5
+
+1 row created.
+
+SQL> DELETE FROM customer_contact WHERE contact_id = 25;
+Contact removed for customer 5
+
+1 row deleted.
+
+10)STATEMENT LEVEL TRIGGER
+
+SQL> CREATE OR REPLACE TRIGGER statement_trigger_supplies
+  2  BEFORE INSERT OR DELETE ON supplies
+  3  BEGIN
+  4     DBMS_OUTPUT.PUT_LINE('Supplies table updated.');
+  5  END;
+  6  /
+
+Trigger created.
+
+SQL> INSERT INTO supplier_copy  SELECT 301, 'RAJA SUPPLIER', '9991112222', 'raja@gmail.com' FROM dual 
+     UNION ALL 
+     SELECT 302, 'KUMAR TRADERS', '8882223333', 'kumar@gmail.com' FROM dual;
+
+2 rows created.
+
+//HACKER RANK 
+
+1 A)Write a code in PL/SQL TO create a trigger that automatically updates a 'last_modified' timestamp whenever a row in a specific table is updated.
+SQL> CREATE OR REPLACE TRIGGER trg_employee_last_modified
+
+
+  2  BEFORE UPDATE ON employee
+  3  FOR EACH ROW
+  4  BEGIN
+  5     :NEW.last_modified := SYSTIMESTAMP;
+  6  END;
+  7  /
+
+Trigger created.
+
+SQL> UPDATE employee SET salary = 70000 WHERE employee_id = 25;
+Employee 25 updated. New Salary: 70000
+
+1 row updated.
+
+SQL> SELECT employee_id, last_modified FROM employee WHERE employee_id = 25;
+
+EMPLOYEE_ID
+-----------
+LAST_MODIFIED
+---------------------------------------------------------------------------
+         25
+26-MAR-26 12.29.39.577000 AM
+
+
+1 B) Write a code in PL/SQL to create a trigger that prevents updates on a certain column during specific hours of the day.
+
+SQL> CREATE OR REPLACE TRIGGER restrict_employee
+  2  BEFORE UPDATE ON employee
+  3  FOR EACH ROW
+  4  BEGIN
+  5     IF TO_NUMBER(TO_CHAR(SYSDATE,'HH24')) >= 0
+  6        AND TO_NUMBER(TO_CHAR(SYSDATE,'HH24')) < 3 THEN
+  7        RAISE_APPLICATION_ERROR(-20009,'updates are not allowed between 12 AM and 3 AM');
+  8     END IF;
+  9  END;
+ 10  /
+
+Trigger created.
+
+SQL> UPDATE employee SET salary = 95000 WHERE employee_id = 25;
+UPDATE employee
+       *
+ERROR at line 1:
+ORA-20009: updates are not allowed between 12 AM and 3 AM
+ORA-06512: at "SYSTEM.RESTRICT_EMPLOYEE", line 4
+ORA-04088: error during execution of trigger 'SYSTEM.RESTRICT_EMPLOYEE'
+
+
+2 A)	Write a code in PL/SQL to develop a trigger that enforces referential integrity by preventing the deletion of a parent record if child records exist.
+
+
+SQL> CREATE OR REPLACE TRIGGER restrict_supplier_delete
+  2  BEFORE DELETE ON supplier
+  3  FOR EACH ROW
+  4  DECLARE
+  5     n NUMBER;
+  6  BEGIN
+  7     SELECT COUNT(*) INTO n
+  8     FROM supplies
+  9     WHERE supplier_id = :OLD.supplier_id;
+ 10
+ 11     IF n > 0 THEN
+ 12        RAISE_APPLICATION_ERROR(-20003,'cannot delete record inherited by supplies table');
+ 13     END IF;
+ 14  END;
+ 15  /
+
+Trigger created.
+
+SQL> DELETE FROM supplier WHERE supplier_id = 1;
+DELETE FROM supplier
+            *
+ERROR at line 1:
+ORA-20003: cannot delete record inherited by supplies table
+ORA-06512: at "SYSTEM.RESTRICT_SUPPLIER_DELETE", line 9
+ORA-04088: error during execution of trigger 'SYSTEM.RESTRICT_SUPPLIER_DELETE'
+
+2 B)Write a code in PL/SQL to create a trigger that checks for duplicate values in a specific column and raises an exception if found.
+
+SQL> CREATE OR REPLACE TRIGGER restrict_insert_employee
+  2  BEFORE INSERT ON employee
+  3  FOR EACH ROW
+  4  DECLARE
+  5     n NUMBER;
+  6  BEGIN
+  7     SELECT COUNT(*) INTO n
+  8     FROM employee
+  9     WHERE employee_phone = :NEW.employee_phone;
+ 10
+ 11     IF n > 0 THEN
+ 12        RAISE_APPLICATION_ERROR(-20004,'cannot insert, phone number already exists');
+ 13     END IF;
+ 14  END;
+ 15  /
+
+Trigger created.
+
+SQL> INSERT INTO employee
+  2  (employee_id, employee_name, role, salary, join_date, experience, employee_phone, branch_id)
+  3  VALUES
+  4  (201, 'RAVI', 'CLERK', 20000, SYSDATE, 2, '9876543210', 1);
+INSERT INTO employee
+            *
+ERROR at line 1:
+ORA-20004: cannot insert, phone number already exists
+ORA-06512: at "SYSTEM.RESTRICT_INSERT_EMPLOYEE", line 9
+ORA-04088: error during execution of trigger 'SYSTEM.RESTRICT_INSERT_EMPLOYEE'
+
+3 A)	Write a code in PL/SQL to create a trigger that validates the availability of items before allowing an order to be placed, considering stock levels and pending orders
+
+SQL> set serveroutput on;
+SQL> CREATE OR REPLACE TRIGGER check_stock_before_outward
+  2  BEFORE INSERT ON outward
+  3  FOR EACH ROW
+  4  DECLARE
+  5  v_stock NUMBER;
+  6  v_used NUMBER;
+  7  BEGIN
+  8  SELECT COUNT(*) INTO v_stock FROM stock_movement WHERE movement_id=:NEW.movement_id;
+  9  SELECT COUNT(*) INTO v_used FROM outward WHERE movement_id=:NEW.movement_id;
+ 10  IF v_used>=v_stock THEN
+ 11  RAISE_APPLICATION_ERROR(-20020,'No stock available for dispatch');
+ 12  END IF;
+ 13  END;
+ 14  /
+
+Trigger created.
+
+SQL> INSERT INTO outward (movement_id, sale_id, dispatch_date, delivery_address)
+  2  VALUES (1, 101, SYSDATE, 'Chennai');
+INSERT INTO outward (movement_id, sale_id, dispatch_date, delivery_address)
+            *
+ERROR at line 1:
+ORA-20020: No stock available for dispatch
+ORA-06512: at "SYSTEM.CHECK_STOCK_BEFORE_OUTWARD", line 8
+ORA-04088: error during execution of trigger
+'SYSTEM.CHECK_STOCK_BEFORE_OUTWARD'
+
+
+ QUESTION PAPER
+
+7a
+
+
+SQL> select * from enrolll ;
+
+STUDENT_ID  COURSE_ID      MARKS
+---------- ---------- ----------
+        25        101         86
+        25        102         90
+        25        103         88
+        25        104         80
+        37        101         86
+        37        102         81
+        37        103         83
+        37        104         90
+        47        101         91
+        47        102         71
+        47        103        102
+
+STUDENT_ID  COURSE_ID      MARKS
+---------- ---------- ----------
+        47        104         97
+        43        101         88
+        43        102         77
+        43        103         96
+        43        104         94
+
+16 rows selected.
+
+SQL> UPDATE enrolll
+  2  SET marks = marks * 1.10
+  3  WHERE course_id IN (
+  4      SELECT course_id
+  5      FROM teachess
+  6      WHERE LOWER(instructor_name) = 'dr kumar'
+  7  );
+
+4 rows updated.
+
+SQL>
+SQL> select * from enrolll ;
+
+STUDENT_ID  COURSE_ID      MARKS
+---------- ---------- ----------
+        25        101         86
+        25        102         90
+        25        103         97
+        25        104         80
+        37        101         86
+        37        102         81
+        37        103         91
+        37        104         90
+        47        101         91
+        47        102         71
+        47        103        112
+
+STUDENT_ID  COURSE_ID      MARKS
+---------- ---------- ----------
+        47        104         97
+        43        101         88
+        43        102         77
+        43        103        106
+        43        104         94
+
+16 rows selected.
+
+b)
+ SQL> SELECT MAX(marks) FROM enrolll;
+
+MAX(MARKS)
+----------
+        97
+
+
+SQL> SELECT s.student_name
+  2  FROM studentt s
+  3  JOIN enrolll e ON s.student_id = e.student_id
+  4  WHERE e.marks = (
+  5      SELECT MAX(marks)
+  6      FROM enrolll
+  7      WHERE marks < (SELECT MAX(marks) FROM enrolll)
+  8  );
+
+STUDENT_NAME
+-------------------------
+SURYA
+
+c)
+ 	SQL> SELECT trunc(AVG(marks)) FROM enrolll;
+
+TRUNC(AVG(MARKS))
+-----------------
+               87
+
+
+SQL> SELECT DISTINCT c.course_name
+  2  FROM coursee c
+  3  JOIN enrolll e ON c.course_id = e.course_id
+  4  WHERE e.marks > (
+  5      SELECT AVG(marks) FROM enrolll
+  6  );
+
+COURSE_NAME
+-------------------------
+MICROPROCESSOR
+LIC
+DIGITAL
+DSA
+
+
+d)
+SQL> SELECT s.student_name, s.city
+  2  FROM studentt s
+  3  JOIN enrolll e ON s.student_id = e.student_id
+  4  WHERE e.marks = (
+  5      SELECT MAX(marks) FROM enrolll
+  6  );
+
+STUDENT_NAME              CITY
+------------------------- -------------------------
+VISHWA                    sivakasi
+KISHORE                   sivakasi
+
+e)
+
+SQL> CREATE OR REPLACE FUNCTION get_max_enrollment_course
+  2  RETURN VARCHAR2
+  3  IS
+  4      v_course_name VARCHAR2(50);
+  5  BEGIN
+  6      SELECT course_name INTO v_course_name
+  7      FROM coursee
+  8      WHERE course_id = (
+  9          SELECT course_id
+ 10          FROM enrolll
+ 11          GROUP BY course_id
+ 12          ORDER BY COUNT(*) DESC
+ 13          FETCH FIRST 1 ROW ONLY
+ 14      );
+ 15
+ 16      RETURN v_course_name;
+ 17  END;
+ 18  /
+
+Function created.
+
+SQL> set serveroutput on;
+SQL> begin
+  2  dbms_output.put_line(get_max_enrollment_course);
+  3  end;
+  4  /
+MICROPROCESSOR
+
+PL/SQL procedure successfully completed.
+
+
+
+7B)
+
+a)
+SQL> SELECT staff_name FROM stafff WHERE LOWER(building) IN ('a', 'c');
+
+STAFF_NAME
+-------------------------
+ratha
+mena
+
+
+b)
+ SQL> select b.book_title,m.member_name , f. amount from bookss b
+  2      join borroww br on b.book_id = br.book_id
+  3      join memberss m on m.member_id = br.member_id
+  4      join finee f on m.member_id = f.member_id
+  5      where b.category in ('database','datamining')
+  6      and f.amount > 500;
+
+BOOK_TITLE                                         MEMBER_NAME
+-------------------------------------------------- -------------------------
+    AMOUNT
+----------
+dbms                                               kishore
+       508
+
+
+c)
+
+SQL> CREATE VIEW member_book_view AS
+  2  SELECT m.member_id, m.member_name, b.book_title
+  3  FROM memberss m
+  4  JOIN borroww br ON m.member_id = br.member_id
+  5  JOIN bookss b ON br.book_id = b.book_id;
+
+View created.
+
+
+d)
+   
+ SQL> CREATE OR REPLACE PROCEDURE add_book (
+  2      p_book_id INT,
+  3      p_title VARCHAR2,
+  4      p_author VARCHAR2,
+  5      p_category VARCHAR2,
+  6      p_price DECIMAL
+  7  )
+  8  IS
+  9  BEGIN
+ 10      INSERT INTO bookss (book_id, book_title, author, category, price)
+ 11      VALUES (p_book_id, p_title, p_author, p_category, p_price);
+ 12  END;
+ 13  /
+
+Procedure created.
+
+SQL> BEGIN
+  2      add_book(101, 'DBMS Concepts', 'Korth', 'Database', 450);
+  3  END;
+  4  /
+
+PL/SQL procedure successfully completed.
+
+
+e)
+
+SQL> CREATE INDEX idx_member_name ON memberss(member_name);
+
+Index created.
+
