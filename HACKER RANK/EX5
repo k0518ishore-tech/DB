@@ -1,0 +1,1 @@
+SELECT employee_name, salary FROM employee WHERE salary < ANY (SELECT salary FROM employee WHERE branch_id = 1 );
