@@ -1,0 +1,2 @@
+SELECT s.supplier_name, sp.product_id FROM supplier s FULL OUTER JOIN supplies sp  ON s.supplier_id = sp.supplier_id;
+
