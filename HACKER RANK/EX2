@@ -1,0 +1,9 @@
+
+Q2. Create a table vehicle to store vehicle details of each branch.
+CREATE TABLE vehicle (
+    vehicle_id INT PRIMARY KEY,
+    vehicle_number VARCHAR(50),
+    type VARCHAR(50),
+    branch_id INT,
+    FOREIGN KEY (branch_id) REFERENCES warehouse_branch(branch_id)
+);
