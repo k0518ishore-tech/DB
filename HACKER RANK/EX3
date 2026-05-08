@@ -1,0 +1,2 @@
+SQL> SELECT * FROM employee WHERE employee_name LIKE 'A%';
+
